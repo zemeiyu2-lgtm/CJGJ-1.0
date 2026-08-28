@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🌱 21天自觉思考 · 晨光书房</title>
+    <style>
+        /* ========== 全局重置 & 主题色 ========== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+            background: #E8F3EE;
+            /* 晨雾绿 */
+            color: #2A4B41;
+            /* 深墨绿 */
+            padding: 20px 16px 100px 16px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 460px;
+            margin: 0 auto;
+        }
+
+        /* ========== 头部 & 日历 ========== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #2A4B41;
+        }
+        .header h1 span {
+            font-weight: 300;
+            font-size: 16px;
+            color: #6B8A7A;
+        }
+        .badge-day {
+            background: #D49B6B;
+            color: #FCF8F0;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(212, 155, 107, 0.3);
+        }
+
+        /* 打卡网格 (7x3) */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            background: #FCF8F0;
+            padding: 16px 12px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(42, 75, 65, 0.06);
+        }
+        .day-dot {
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            background: #E2E8E4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            color: #8AA39A;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        .day-dot.completed {
+            background: #2A4B41;
+            color: #FCF8F0;
+            border-color: #D49B6B;
+            box-shadow: 0 2px 6px rgba(42, 75, 65, 0.2);
+        }
+        .day-dot.active {
+            border-color: #D49B6B;
+            background: #FCF8F0;
+            color: #2A4B41;
+            transform: scale(1.05);
+            font-weight: 700;
+        }
+        .day-dot.future {
+            opacity: 0.5;
+        }
+
+        /* ========== 主卡片 ========== */
+        .main-card {
+            background: #FCF8F0;
+            border-radius: 28px;
+            padding: 24px 20px 20px 20px;
+            box-shadow: 0 12px 30px rgba(42, 75, 65, 0.08);
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .day-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #2A4B41;
+        }
+        .day-sub {
+            font-size: 14px;
+            color: #6B8A7A;
+            border-bottom: 2px solid #E8F3EE;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* ========== 四步流程 (手风琴) ========== */
+        .step-block {
+            background: #F4F9F6;
+            border-radius: 16px;
+            padding: 16px 16px 12px 16px;
+            margin-bottom: 14px;
+            border-left: 4px solid #D49B6B;
+            transition: all 0.25s;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .step-block.unlocked {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .step-block.completed {
+            border-left-color: #2A4B41;
+            background: #E8F3EE;
+            opacity: 0.85;
+        }
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #2A4B41;
+        }
+        .step-header .step-num {
+            background: #D49B6B;
+            color: #FCF8F0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .step-block.completed .step-num {
+            background: #2A4B41;
+        }
+        .step-body {
+            padding-left: 34px;
+        }
+        .step-body p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #3D5A50;
+            margin-bottom: 10px;
+        }
+        .step-body textarea {
+            width: 100%;
+            border: 1px solid #D3E0D9;
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 15px;
+            font-family: inherit;
+            background: white;
+            resize: vertical;
+            min-height: 70px;
+            color: #2A4B41;
+            transition: 0.2s;
+        }
+        .step-body textarea:focus {
+            outline: none;
+            border-color: #D49B6B;
+            box-shadow: 0 0 0 3px rgba(212, 155, 107, 0.15);
+        }
+        .step-body textarea:disabled {
+            background: #F4F9F6;
+            color: #8AA39A;
+        }
+        .char-counter {
+            text-align: right;
+            font-size: 12px;
+            color: #8AA39A;
+            margin-top: 4px;
+        }
+
+        /* 阅读区可点击摘录 */
+        .reading-text {
+            font-size: 16px;
+            line-height: 1.9;
+            color: #2A4B41;
+            padding: 6px 0;
+        }
+        .reading-text p {
+            margin-bottom: 14px;
+            text-indent: 2em;
+        }
+        .reading-text .highlight-block {
+            background: #DCE9E3;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border-left: 4px solid #D49B6B;
+            margin: 12px 0;
+            font-size: 0.95em;
+            text-indent: 0;
+        }
+        .clickable-para {
+            cursor: pointer;
+            transition: 0.1s;
+            padding: 4px 0;
+            border-radius: 4px;
+        }
+        .clickable-para:active {
+            background: #DCE9E3;
+        }
+
+        .btn-step {
+            background: #D49B6B;
+            color: #FCF8F0;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.15s;
+            box-shadow: 0 4px 10px rgba(212, 155, 107, 0.2);
+            width: 100%;
+        }
+        .btn-step:active {
+            transform: scale(0.97);
+            opacity: 0.8;
+        }
+        .btn-step:disabled {
+            opacity: 0.4;
+            box-shadow: none;
+            pointer-events: none;
+        }
+        .btn-step.complete-btn {
+            background: #2A4B41;
+            box-shadow: 0 4px 10px rgba(42, 75, 65, 0.2);
+        }
+
+        /* ========== 进度圆环 ========== */
+        .progress-ring-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0 10px 0;
+            padding-top: 12px;
+            border-top: 2px solid #E8F3EE;
+        }
+        .ring-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+        }
+        .ring-container svg {
+            transform: rotate(-90deg);
+        }
+        .ring-bg {
+            fill: none;
+            stroke: #E2E8E4;
+            stroke-width: 6;
+        }
+        .ring-progress {
+            fill: none;
+            stroke: #2A4B41;
+            stroke-width: 6;
+            stroke-linecap: round;
+            stroke-dasharray: 138.23;
+            stroke-dashoffset: 138.23;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+        .ring-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            font-weight: 700;
+            color: #2A4B41;
+        }
+        .progress-text {
+            font-size: 15px;
+            color: #6B8A7A;
+            font-weight: 500;
+        }
+
+        /* ========== 弹窗 (激励) ========== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(42, 75, 65, 0.5);
+            backdrop-filter: blur(6px);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            animation: fadeIn 0.3s;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal-box {
+            background: #FCF8F0;
+            max-width: 380px;
+            width: 100%;
+            padding: 32px 24px 28px 24px;
+            border-radius: 32px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: scaleUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal-box .emoji-big {
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+        .modal-box h3 {
+            font-size: 20px;
+            color: #2A4B41;
+            margin-bottom: 6px;
+        }
+        .modal-box .verse {
+            font-size: 17px;
+            line-height: 1.6;
+            color: #3D5A50;
+            background: #E8F3EE;
+            padding: 16px 18px;
+            border-radius: 16px;
+            margin: 12px 0 18px 0;
+            font-style: italic;
+            border-left: 4px solid #D49B6B;
+            text-align: left;
+        }
+        .modal-box .verse-ref {
+            text-align: right;
+            font-size: 14px;
+            font-weight: 600;
+            color: #D49B6B;
+            margin-top: -10px;
+            margin-bottom: 12px;
+            font-style: normal;
+        }
+        .modal-box .btn-modal {
+            background: #2A4B41;
+            color: #FCF8F0;
+            border: none;
+            padding: 12px 0;
+            width: 100%;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 17px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .modal-box .btn-modal:active {
+            transform: scale(0.97);
+        }
+
+        /* ========== 星星/飘落动画 ========== */
+        .star-burst {
+            position: fixed;
+            pointer-events: none;
+            font-size: 30px;
+            z-index: 1000;
+            animation: floatUp 1.2s ease-out forwards;
+        }
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(0.5) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-200px) scale(1.5) rotate(40deg);
+            }
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes scaleUp {
+            from {
+                opacity: 0;
+                transform: scale(0.85);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ========== 工具类 ========== */
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- 头部 -->
+        <div class="header">
+            <h1>🌱 晨光<span>· 自觉书房</span></h1>
+            <span class="badge-day" id="dayBadge">第 1 / 21 天</span>
+        </div>
+
+        <!-- 日历 -->
+        <div class="calendar-grid" id="calendarGrid">
+            <!-- JS 渲染 21 个圆点 -->
+        </div>
+
+        <!-- 主卡片 -->
+        <div class="main-card" id="mainCard">
+            <div class="day-title" id="dayTitle">加载中...</div>
+            <div class="day-sub">
+                <span id="daySubDate">📅 第 1 课</span>
+                <span id="daySubStatus">🌱 未开始</span>
+            </div>
+
+            <!-- 步骤 1：静读 -->
+            <div class="step-block" id="step1">
+                <div class="step-header">
+                    <span class="step-num">1</span>
+                    <span>📖 静读 · 领受</span>
+                </div>
+                <div class="step-body">
+                    <div class="reading-text" id="readingContent">
+                        <!-- 动态渲染 -->
+                    </div>
+                    <button class="btn-step" id="btnStep1">⏳ 我已读完 (需停留 30 秒)</button>
+                    <div style="font-size:13px; color:#8AA39A; margin-top:6px;" id="timerHint">请慢慢阅读，不要着急...</div>
+                </div>
+            </div>
+
+            <!-- 步骤 2：捕获 -->
+            <div class="step-block" id="step2">
+                <div class="step-header">
+                    <span class="step-num">2</span>
+                    <span>🎯 捕获 · 触动</span>
+                </div>
+                <div class="step-body">
+                    <p>✍️ 哪句话最触动你？把它摘录下来：</p>
+                    <textarea id="inputStep2" placeholder="例如：'你们中间若有缺少智慧的，应当求那厚赐众人的神...'" disabled></textarea>
+                    <div class="char-counter"><span id="count2">0</span> / 至少 10 字</div>
+                    <button class="btn-step" id="btnStep2" disabled>✅ 确认捕获</button>
+                </div>
+            </div>
+
+            <!-- 步骤 3：联结 -->
+            <div class="step-block" id="step3">
+                <div class="step-header">
+                    <span class="step-num">3</span>
+                    <span>🔗 联结 · 内化</span>
+                </div>
+                <div class="step-body">
+                    <p>💭 这让我想起自己经历或认知中的什么？</p>
+                    <textarea id="inputStep3" placeholder="请写下一段真实的联想（至少10个字）..." disabled></textarea>
+                    <div class="char-counter"><span id="count3">0</span> / 至少 10 字</div>
+                    <button class="btn-step" id="btnStep3" disabled>✅ 确认联结</button>
+                </div>
+            </div>
+
+            <!-- 步骤 4：追问 -->
+            <div class="step-block" id="step4">
+                <div class="step-header">
+                    <span class="step-num">4</span>
+                    <span>🕊️ 追问 · 应用</span>
+                </div>
+                <div class="step-body">
+                    <p id="hookQuestionText">加载钩子问题...</p>
+                    <textarea id="inputStep4" placeholder="请写下你的行动回应（至少10个字）..." disabled></textarea>
+                    <div class="char-counter"><span id="count4">0</span> / 至少 10 字</div>
+                    <button class="btn-step" id="btnStep4" disabled>✅ 确认应用</button>
+                </div>
+            </div>
+
+            <!-- 进度圆环 & 完成按钮 -->
+            <div class="progress-ring-wrap">
+                <div class="ring-container">
+                    <svg viewBox="0 0 48 48" width="60" height="60">
+                        <circle class="ring-bg" cx="24" cy="24" r="22"></circle>
+                        <circle class="ring-progress" id="ringProgress" cx="24" cy="24" r="22"></circle>
+                    </svg>
+                    <div class="ring-label" id="ringLabel">0%</div>
+                </div>
+                <div class="progress-text" id="progressText">今日 0 / 4 步</div>
+            </div>
+
+            <button class="btn-step complete-btn" id="btnCompleteDay" disabled>🔒 完成今日学习</button>
+        </div>
+
+        <div style="text-align:center; font-size:13px; color:#8AA39A; margin-top:10px;">
+            进度自动保存 · 祢的话是我脚前的灯
+        </div>
+    </div>
+
+    <!-- ========== 激励弹窗 ========== -->
+    <div class="modal-overlay" id="celebrationModal">
+        <div class="modal-box">
+            <div class="emoji-big" id="modalEmoji">⭐</div>
+            <h3 id="modalTitle">太棒了！</h3>
+            <div class="verse" id="modalVerse">“你的话是我脚前的灯，是我路上的光。”</div>
+            <div class="verse-ref" id="modalRef">— 诗篇 119:105</div>
+            <button class="btn-modal" id="modalBtn">❤️ 阿们，继续前行</button>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // ★★★★★  【数据填充区】 在这里放入你的 21 天课程内容 ★★★★★
+        // ================================================================
+        const courseData = [
+            // ---------- 第 1 ~ 7 天：示例内容 (心理学/灵性入门) ----------
+            {
+                day: 1,
+                title: "认识你的内在声音",
+                reading: `
+                    <p>每个人心中都有一个持续不断的“内在独白”。它可能是鼓励，也可能是批评。</p>
+                    <p>心理学中称之为“自动化思维”。这些想法往往在无意识中塑造我们的情绪和行为。</p>
+                    <div class="highlight-block">✨ 关键洞察：你并不等于你的想法。你是观察想法的那个人。</div>
+                    <p>今天，试着仅仅观察自己头脑中的声音，而不急于认同或反驳它。</p>
+                `,
+                hook: "在今天的生活中，你最常听到的内在声音是鼓励还是批评？明天你打算如何回应它？"
+            }, {
+                day: 2,
+                title: "感恩的视角",
+                reading: `
+                    <p>感恩不是对困境的否认，而是对恩典的察觉。</p>
+                    <p>积极心理学研究发现，每日写下三件感恩之事，能显著提升幸福感和心理韧性。</p>
+                    <div class="highlight-block">✨ 关键洞察：感恩是把目光从“我没有的”转向“我已拥有的”。</div>
+                    <p>就像在黑暗中点亮一盏灯，它不能消除黑暗，却能改变你看待黑暗的方式。</p>
+                `,
+                hook: "如果今天要挑选一件最微小却真实值得感恩的事，那会是什么？这个察觉如何改变你的心境？"
+            }, {
+                day: 3,
+                title: "情绪是信使",
+                reading: `
+                    <p>愤怒、悲伤、焦虑——这些情绪常常被我们视为“敌人”或“软弱”。</p>
+                    <p>但情绪其实是内在世界的信使。愤怒提醒我们边界被侵犯；悲伤帮助我们与失去和解；焦虑则在为未来做准备。</p>
+                    <div class="highlight-block">✨ 关键洞察：压抑情绪会让它更激烈地反扑；聆听它，反而能获得引导。</div>
+                    <p>就像对待一位急躁的客人，先请他坐下，听听他要说什么。</p>
+                `,
+                hook: "最近一次让你感到强烈情绪的事件是什么？如果情绪是信使，它想告诉你什么信息？"
+            }, {
+                day: 4,
+                title: "心意更新而变化",
+                reading: `
+                    <p>保罗在罗马书中劝勉：“不要效法这个世界，只要心意更新而变化。”</p>
+                    <p>“更新”不是一次性的奇迹，而是一个每日的、主动的选择。神经科学证明，大脑具有“神经可塑性”——我们反复使用的思维路径会变强，反之则会变弱。</p>
+                    <div class="highlight-block">✨ 关键洞察：你所专注的，最终会塑造你。每天用真理喂养你的心，就像给植物浇水。</div>
+                    <p>你今天选择将注意力放在哪里，那里就会生长。</p>
+                `,
+                hook: "如果“心意更新”就像给花园浇水，你今天决定在哪一块“心田”上用心浇灌？"
+            }, {
+                day: 5,
+                title: "与焦虑做朋友",
+                reading: `
+                    <p>焦虑是对未来的过度想象。它试图让我们为所有可能性做好准备，但却常常让我们动弹不得。</p>
+                    <p>研究表明，90%的焦虑内容从未真正发生。焦虑的本质，是“试图掌控不可掌控之事”。</p>
+                    <div class="highlight-block">✨ 关键洞察：对抗焦虑的最佳方式，不是消灭它，而是将它的能量转化为当下的行动。</div>
+                    <p>当你感到焦虑时，问自己：“此刻，我能做的一件小事是什么？”</p>
+                `,
+                hook: "你此刻是否正为某件事焦虑？把它写出来，然后问：今天我能采取的一小步行动是什么？"
+            }, {
+                day: 6,
+                title: "静默的力量",
+                reading: `
+                    <p>在这个充满噪音和碎片信息的时代，静默成为了一种稀缺的属灵操练。</p>
+                    <p>诗篇中说：“你们要休息，要知道我是神。”静默不是空白，而是一种深刻的聆听，是对神圣秩序的信任。</p>
+                    <div class="highlight-block">✨ 关键洞察：在静默中，我们放下掌控的焦虑，让灵魂的杂草得以被看清和拔除。</div>
+                    <p>每天给自己5分钟的刻意静默，仅仅专注于呼吸，让思绪像云一样飘过而不抓住它。</p>
+                `,
+                hook: "如果今天你能争取5分钟的绝对静默，你会选择在什么时间、什么地点？你期待听到什么？"
+            }, {
+                day: 7,
+                title: "先完成，再完美",
+                reading: `
+                    <p>拖延的最大敌人不是懒惰，而是对“完美”的执念。我们因为害怕做得不够好，而迟迟不肯开始。</p>
+                    <p>但任何伟大的作品，都始于一个粗糙的雏形。就像种子埋入土中，最初只是一团不起眼的混沌。</p>
+                    <div class="highlight-block">✨ 关键洞察：“先完成，再完美”是对抗拖延的黄金法则。启动行动本身，就会改变你的心理状态。</div>
+                    <p>今天，选择一件你一直在犹豫的事，允许自己做得“不完美”。</p>
+                `,
+                hook: "有一件你一直拖延的事吗？如果今天只做它的“最粗糙版本”，你会从哪里开始？"
+            },
+
+            // ---------- 第 8 ~ 21 天：模板占位 (请替换为你自己的内容) ----------
+            ...Array.from({ length: 14 }, (_, i) => {
+                const dayNum = i + 8;
+                return {
+                    day: dayNum,
+                    title: `第 ${dayNum} 天 · 你的课程主题`,
+                    reading: `
+                        <p>在这里写下你第 ${dayNum} 天的正文内容。支持 <strong>HTML</strong> 标签。</p>
+                        <p>你可以放故事、经文、案例或论述。建议控制手机 3-5 屏内。</p>
+                        <div class="highlight-block">✨ 核心要点：用这个区块强调今日最重要的洞察。</div>
+                        <p>记得保持段落简洁，每段不超过 4 行，方便手机阅读。</p>
+                    `,
+                    hook: "这是今日的“钩子问题”，引导读者将知识转化为行动。请替换成你独特的问题。"
+                };
+            })
+        ];
+
+        // ================================================================
+        // ★★★★★  圣经金句库 (温暖鼓励风) ★★★★★
+        // ================================================================
+        const bibleVerses = [
+            { text: "你的话是我脚前的灯，是我路上的光。", ref: "诗篇 119:105" },
+            { text: "我靠着那加给我力量的，凡事都能做。", ref: "腓立比书 4:13" },
+            { text: "你当刚强壮胆！不要惧怕，也不要惊惶，因为你无论往哪里去，耶和华你的神必与你同在。", ref: "约书亚记 1:9" },
+            { text: "因为耶和华赐人智慧，知识和聪明都由他口而出。", ref: "箴言 2:6" },
+            { text: "你们中间若有缺少智慧的，应当求那厚赐与众人、也不斥责人的神，主就必赐给他。", ref: "雅各书 1:5" },
+            { text: "不要效法这个世界，只要心意更新而变化，叫你们察验何为神的善良、纯全、可喜悦的旨意。", ref: "罗马书 12:2" },
+            { text: "但那等候耶和华的必从新得力。他们必如鹰展翅上腾，他们奔跑却不困倦，行走却不疲乏。", ref: "以赛亚书 40:31" },
+            { text: "当用各样的智慧，把基督的道理丰丰富富地存在心里，用诗章、颂词、灵歌，彼此教导，互相劝戒，心被恩感，歌颂神。",
+                ref: "歌罗西书 3:16" },
+            { text: "神能照着运行在我们心里的大力，充充足足地成就一切，超过我们所求所想的。", ref: "以弗所书 3:20" },
+            { text: "你要专心仰赖耶和华，不可倚靠自己的聪明，在你一切所行的事上都要认定他，他必指引你的路。", ref: "箴言 3:5-6" }
+        ];
+
+        // ================================================================
+        // ★★★★★  核心逻辑 (不用改，直接运行) ★★★★★
+        // ================================================================
+
+        // --- 状态 ---
+        let state = {
+            currentDay: 0, // 0-index
+            steps: {
+                1: { completed: false, timerDone: false },
+                2: { completed: false, text: '' },
+                3: { completed: false, text: '' },
+                4: { completed: false, text: '' }
+            },
+            completedDays: [] // 已完成的 day 索引 (0-index)
+        };
+
+        // DOM 引用
+        const $ = id => document.getElementById(id);
+        const calendarGrid = $('calendarGrid');
+        const dayBadge = $('dayBadge');
+        const dayTitle = $('dayTitle');
+        const daySubDate = $('daySubDate');
+        const daySubStatus = $('daySubStatus');
+        const readingContent = $('readingContent');
+        const hookQuestionText = $('hookQuestionText');
+
+        const step1 = $('step1');
+        const step2 = $('step2');
+        const step3 = $('step3');
+        const step4 = $('step4');
+        const btnStep1 = $('btnStep1');
+        const btnStep2 = $('btnStep2');
+        const btnStep3 = $('btnStep3');
+        const btnStep4 = $('btnStep4');
+        const inputStep2 = $('inputStep2');
+        const inputStep3 = $('inputStep3');
+        const inputStep4 = $('inputStep4');
+        const count2 = $('count2');
+        const count3 = $('count3');
+        const count4 = $('count4');
+        const timerHint = $('timerHint');
+        const ringProgress = $('ringProgress');
+        const ringLabel = $('ringLabel');
+        const progressText = $('progressText');
+        const btnCompleteDay = $('btnCompleteDay');
+
+        const modalOverlay = $('celebrationModal');
+        const modalEmoji = $('modalEmoji');
+        const modalTitle = $('modalTitle');
+        const modalVerse = $('modalVerse');
+        const modalRef = $('modalRef');
+        const modalBtn = $('modalBtn');
+
+        let timerInterval = null;
+        let timerSeconds = 0;
+        let isTimerRunning = false;
+        let currentDayData = null;
+
+        // --- 工具 ---
+        function shuffleArray(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i +
+                    1));
+                [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
+
+        function getRandomVerse() {
+            const shuffled = shuffleArray([...bibleVerses]);
+            return shuffled[0];
+        }
+
+        function getStepCount() {
+            let c = 0;
+            for (let i = 1; i <= 4; i++) { if (state.steps[i].completed) c++; }
+            return c;
+        }
+
+        function getProgressPercent() {
+            return Math.round((getStepCount() / 4) * 100);
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem('soul_study_state', JSON.stringify(state));
+            } catch (e) {}
+        }
+
+        function loadState() {
+            try {
+                const raw = localStorage.getItem('soul_study_state');
+                if (raw) {
+                    const saved = JSON.parse(raw);
+                    if (saved.currentDay !== undefined) state.currentDay = saved.currentDay;
+                    if (saved.steps) state.steps = saved.steps;
+                    if (saved.completedDays) state.completedDays = saved.completedDays;
+                }
+            } catch (e) {}
+        }
+
+        // --- 飘星动画 ---
+        function burstStars() {
+            const emojis = ['⭐', '✨', '🌟', '💫', '🌿', '🕊️'];
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    const el = document.createElement('div');
+                    el.className = 'star-burst';
+                    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    el.style.left = (10 + Math.random() * 80) + '%';
+                    el.style.top = (20 + Math.random() * 50) + '%';
+                    el.style.fontSize = (20 + Math.random() * 25) + 'px';
+                    document.body.appendChild(el);
+                    setTimeout(() => el.remove(), 1500);
+                }, i * 100);
+            }
+        }
+
+        // --- 显示庆祝弹窗 ---
+        function showCelebration(stepNum) {
+            const verse = getRandomVerse();
+            const messages = {
+                1: { emoji: '📖', title: '领受话语，如鹿渴慕溪水！' },
+                2: { emoji: '🎯', title: '你抓住了真理的亮光！' },
+                3: { emoji: '🔗', title: '主的话语正在你生命中生根！' },
+                4: { emoji: '🕊️', title: '行出真理，磐石之上！' }
+            };
+            const msg = messages[stepNum] || messages[1];
+            modalEmoji.textContent = msg.emoji;
+            modalTitle.textContent = msg.title;
+            modalVerse.textContent = `“${verse.text}”`;
+            modalRef.textContent = `— ${verse.ref}`;
+            modalOverlay.classList.add('show');
+            burstStars();
+
+            // Web Audio 叮声
+            try {
+                const ctx = new(window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.frequency.value = 880;
+                osc.type = 'sine';
+                gain.gain.value = 0.15;
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+                osc.stop(ctx.currentTime + 0.6);
+            } catch (e) {}
+        }
+
+        // --- 渲染日历 ---
+        function renderCalendar() {
+            calendarGrid.innerHTML = '';
+            for (let i = 0; i < 21; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'day-dot';
+                dot.textContent = i + 1;
+                if (state.completedDays.includes(i)) {
+                    dot.classList.add('completed');
+                } else if (i === state.currentDay) {
+                    dot.classList.add('active');
+                } else if (i > state.currentDay) {
+                    dot.classList.add('future');
+                }
+                calendarGrid.appendChild(dot);
+            }
+        }
+
+        // --- 更新步骤 UI 解锁状态 ---
+        function updateStepsUI() {
+            const s = state.steps;
+            // Step1 永远解锁（只要不是已完成）
+            step1.classList.add('unlocked');
+            if (s[1].completed) step1.classList.add('completed');
+            else step1.classList.remove('completed');
+
+            // Step2 解锁条件：step1 完成
+            if (s[1].completed) {
+                step2.classList.add('unlocked');
+                inputStep2.disabled = false;
+            } else {
+                step2.classList.remove('unlocked');
+                inputStep2.disabled = true;
+            }
+            if (s[2].completed) { step2.classList.add('completed');
+                inputStep2.disabled = true; } else step2.classList.remove('completed');
+
+            // Step3 解锁条件：step2 完成
+            if (s[2].completed) {
+                step3.classList.add('unlocked');
+                inputStep3.disabled = false;
+            } else {
+                step3.classList.remove('unlocked');
+                inputStep3.disabled = true;
+            }
+            if (s[3].completed) { step3.classList.add('completed');
+                inputStep3.disabled = true; } else step3.classList.remove('completed');
+
+            // Step4 解锁条件：step3 完成
+            if (s[3].completed) {
+                step4.classList.add('unlocked');
+                inputStep4.disabled = false;
+            } else {
+                step4.classList.remove('unlocked');
+                inputStep4.disabled = true;
+            }
+            if (s[4].completed) { step4.classList.add('completed');
+                inputStep4.disabled = true; } else step4.classList.remove('completed');
+
+            // 按钮文本更新
+            btnStep1.textContent = s[1].completed ? '✅ 已完成静读' : '⏳ 我已读完 (需停留 30 秒)';
+            btnStep2.textContent = s[2].completed ? '✅ 已捕获' : '✅ 确认捕获';
+            btnStep3.textContent = s[3].completed ? '✅ 已联结' : '✅ 确认联结';
+            btnStep4.textContent = s[4].completed ? '✅ 已应用' : '✅ 确认应用';
+
+            // 按钮禁用
+            btnStep1.disabled = s[1].completed || !s[1].timerDone;
+            btnStep2.disabled = s[2].completed || inputStep2.value.length < 10;
+            btnStep3.disabled = s[3].completed || inputStep3.value.length < 10;
+            btnStep4.disabled = s[4].completed || inputStep4.value.length < 10;
+
+            // 更新计时器提示
+            if (!s[1].completed && s[1].timerDone) {
+                timerHint.textContent = '✅ 已满 30 秒，可以点击完成静读！';
+                timerHint.style.color = '#2A4B41';
+            } else if (!s[1].completed) {
+                timerHint.textContent = `⏱️ 请阅读至少 30 秒 (已读 ${timerSeconds}s)`;
+                timerHint.style.color = '#8AA39A';
+            } else {
+                timerHint.textContent = '📖 静读已完成';
+                timerHint.style.color = '#6B8A7A';
+            }
+
+            // 更新计数
+            count2.textContent = inputStep2.value.length;
+            count3.textContent = inputStep3.value.length;
+            count4.textContent = inputStep4.value.length;
+
+            // 更新进度环
+            const pct = getProgressPercent();
+            const circumference = 138.23;
+            const offset = circumference - (pct / 100) * circumference;
+            ringProgress.style.strokeDashoffset = offset;
+            ringLabel.textContent = pct + '%';
+            progressText.textContent = `今日 ${getStepCount()} / 4 步`;
+
+            // 完成按钮
+            const allDone = s[1].completed && s[2].completed && s[3].completed && s[4].completed;
+            if (allDone) {
+                btnCompleteDay.disabled = false;
+                btnCompleteDay.textContent = '🎉 完成今日学习！';
+            } else {
+                btnCompleteDay.disabled = true;
+                btnCompleteDay.textContent = `🔒 完成全部 4 步 (${getStepCount()}/4)`;
+            }
+
+            // 状态文本
+            if (allDone) daySubStatus.textContent = '✅ 已完成';
+            else if (getStepCount() > 0) daySubStatus.textContent = `🌱 进行中 (${getStepCount()}/4)`;
+            else daySubStatus.textContent = '🌱 未开始';
+        }
+
+        // --- 加载当日课程 ---
+        function loadDay(index) {
+            const data = courseData[index];
+            if (!data) return;
+            currentDayData = data;
+
+            dayBadge.textContent = `第 ${index+1} / 21 天`;
+            dayTitle.textContent = data.title;
+            daySubDate.textContent = `📅 第 ${index+1} 课`;
+
+            // 阅读内容
+            readingContent.innerHTML = data.reading;
+            // 钩子问题
+            hookQuestionText.innerHTML = `🕊️ ${data.hook}`;
+
+            // 重置计时器 (如果当天没完成step1)
+            if (!state.steps[1].completed) {
+                timerSeconds = 0;
+                isTimerRunning = false;
+                state.steps[1].timerDone = false;
+                if (timerInterval) { clearInterval(timerInterval);
+                    timerInterval = null; }
+            }
+
+            // 从状态中恢复文本输入
+            inputStep2.value = state.steps[2].text || '';
+            inputStep3.value = state.steps[3].text || '';
+            inputStep4.value = state.steps[4].text || '';
+
+            // 如果 step1 未完成且未开始计时，启动计时
+            if (!state.steps[1].completed && !state.steps[1].timerDone) {
+                if (timerInterval) clearInterval(timerInterval);
+                isTimerRunning = true;
+                timerInterval = setInterval(() => {
+                    timerSeconds++;
+                    if (timerSeconds >= 30) {
+                        state.steps[1].timerDone = true;
+                        updateStepsUI();
+                        if (timerInterval) clearInterval(timerInterval);
+                        timerInterval = null;
+                    }
+                    updateStepsUI();
+                }, 1000);
+            }
+
+            renderCalendar();
+            updateStepsUI();
+            saveState();
+        }
+
+        // --- 完成步骤 ---
+        function completeStep(stepNum) {
+            if (stepNum === 1) {
+                if (!state.steps[1].timerDone) return;
+                state.steps[1].completed = true;
+                if (timerInterval) { clearInterval(timerInterval);
+                    timerInterval = null; }
+                showCelebration(1);
+            } else if (stepNum === 2) {
+                const text = inputStep2.value.trim();
+                if (text.length < 10) return;
+                state.steps[2].text = text;
+                state.steps[2].completed = true;
+                showCelebration(2);
+            } else if (stepNum === 3) {
+                const text = inputStep3.value.trim();
+                if (text.length < 10) return;
+                state.steps[3].text = text;
+                state.steps[3].completed = true;
+                showCelebration(3);
+            } else if (stepNum === 4) {
+                const text = inputStep4.value.trim();
+                if (text.length < 10) return;
+                state.steps[4].text = text;
+                state.steps[4].completed = true;
+                showCelebration(4);
+            }
+            updateStepsUI();
+            saveState();
+            // 如果全部完成，自动滚动到顶部显示进度
+            if (getStepCount() === 4) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // --- 完成今日 ---
+        function completeDay() {
+            const allDone = state.steps[1].completed && state.steps[2].completed && state.steps[3].completed && state
+                .steps[4].completed;
+            if (!allDone) return;
+
+            // 标记当天为已完成
+            if (!state.completedDays.includes(state.currentDay)) {
+                state.completedDays.push(state.currentDay);
+            }
+
+            // 检查里程碑
+            const completedCount = state.completedDays.length;
+            let milestoneMsg = '';
+            if (completedCount === 7) milestoneMsg = '🎉 七天！你已跨越第一个山峰！';
+            else if (completedCount === 14) milestoneMsg = '🔥 十四天！你的生命正在被更新！';
+            else if (completedCount === 21) milestoneMsg = '👑 二十一天！新造的人！旧事已过，都变成新的了！';
+
+            // 前进到下一天（如果未完成所有）
+            if (state.currentDay < 20) {
+                // 重置步骤状态
+                state.steps = { 1: { completed: false, timerDone: false }, 2: { completed: false, text: '' },
+                    3: { completed: false, text: '' }, 4: { completed: false, text: '' } };
+                state.currentDay++;
+                // 如果下一天已经完成过，自动跳到未完成的一天
+                while (state.completedDays.includes(state.currentDay) && state.currentDay < 20) {
+                    state.currentDay++;
+                }
+                loadDay(state.currentDay);
+                // 显示里程碑或普通鼓励
+                if (milestoneMsg) {
+                    setTimeout(() => {
+                        const verse = getRandomVerse();
+                        modalEmoji.textContent = '🎊';
+                        modalTitle.textContent = milestoneMsg;
+                        modalVerse.textContent = `“${verse.text}”`;
+                        modalRef.textContent = `— ${verse.ref}`;
+                        modalOverlay.classList.add('show');
+                        burstStars();
+                    }, 400);
+                } else {
+                    // 普通完成鼓励
+                    setTimeout(() => {
+                        const verse = getRandomVerse();
+                        modalEmoji.textContent = '🌅';
+                        modalTitle.textContent = '你忠于今日的托付！';
+                        modalVerse.textContent = `“${verse.text}”`;
+                        modalRef.textContent = `— ${verse.ref}`;
+                        modalOverlay.classList.add('show');
+                        burstStars();
+                    }, 400);
+                }
+            } else {
+                // 完成全部21天！
+                setTimeout(() => {
+                    modalEmoji.textContent = '🕊️';
+                    modalTitle.textContent = '🏁 你完成了 21 天旅程！';
+                    modalVerse.textContent =
+                    `“那美好的仗我已经打过了，当跑的路我已经跑尽了，所信的道我已经守住了。”`;
+                    modalRef.textContent = '— 提摩太后书 4:7';
+                    modalOverlay.classList.add('show');
+                    burstStars();
+                }, 400);
+                // 禁用继续
+                btnCompleteDay.disabled = true;
+                btnCompleteDay.textContent = '🎉 全部完成！哈利路亚！';
+            }
+            saveState();
+        }
+
+        // --- 事件绑定 ---
+        function initEvents() {
+            btnStep1.onclick = () => completeStep(1);
+            btnStep2.onclick = () => completeStep(2);
+            btnStep3.onclick = () => completeStep(3);
+            btnStep4.onclick = () => completeStep(4);
+            btnCompleteDay.onclick = completeDay;
+
+            // 实时监听输入
+            inputStep2.oninput = () => { state.steps[2].text = inputStep2.value;
+                updateStepsUI();
+                saveState(); };
+            inputStep3.oninput = () => { state.steps[3].text = inputStep3.value;
+                updateStepsUI();
+                saveState(); };
+            inputStep4.oninput = () => { state.steps[4].text = inputStep4.value;
+                updateStepsUI();
+                saveState(); };
+
+            // 点击阅读段落自动填入 Step2 (辅助摘录)
+            readingContent.addEventListener('click', (e) => {
+                const target = e.target.closest('p, .highlight-block');
+                if (target && !state.steps[2].completed && state.steps[1].completed) {
+                    let text = target.textContent.trim();
+                    if (text.length > 0) {
+                        inputStep2.value = text;
+                        state.steps[2].text = text;
+                        updateStepsUI();
+                        saveState();
+                        // 闪烁反馈
+                        target.style.transition = '0.1s';
+                        target.style.backgroundColor = '#DCE9E3';
+                        setTimeout(() => { target.style.backgroundColor = ''; }, 300);
+                    }
+                }
+            });
+
+            // 弹窗关闭
+            modalBtn.onclick = () => {
+                modalOverlay.classList.remove('show');
+            };
+            modalOverlay.onclick = (e) => {
+                if (e.target === modalOverlay) modalOverlay.classList.remove('show');
+            };
+        }
+
+        // --- 初始化 ---
+        function init() {
+            loadState();
+            // 确保当前天没有被标记完成（如果已完成，自动跳到下一未完成）
+            while (state.completedDays.includes(state.currentDay) && state.currentDay < 20) {
+                state.currentDay++;
+            }
+            if (state.currentDay >= 21) {
+                // 全部完成展示
+                state.currentDay = 20;
+            }
+            loadDay(state.currentDay);
+            initEvents();
+            // 自动开启计时如果未完成
+            if (!state.steps[1].completed && !state.steps[1].timerDone) {
+                // 已经在 loadDay 中启动
+            }
+        }
+
+        init();
+        console.log('🌱 晨光书房已开启！愿你每日得智慧。');
+    </script>
+</body>
+</html>
