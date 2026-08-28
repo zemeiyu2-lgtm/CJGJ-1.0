@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>⚙️ 管理后台 · 晨光书房</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+            background: #f4f0ea;
+            color: #2A4B41;
+            padding: 20px 16px 60px 16px;
+        }
+        .container { max-width: 700px; margin: 0 auto; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .header h1 { font-size: 22px; font-weight: 700; color: #2A4B41; }
+        .header .badge {
+            background: #D49B6B;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            padding: 28px 24px;
+            box-shadow: 0 8px 24px rgba(42, 75, 65, 0.08);
+            margin-bottom: 20px;
+        }
+        .login-box label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 4px; margin-top: 12px; }
+        .login-box input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #E2E8E4;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+        .login-box input:focus { outline: none; border-color: #D49B6B; box-shadow: 0 0 0 3px rgba(212,155,107,0.15); }
+        .login-box .btn-primary {
+            background: #2A4B41;
+            color: white;
+            border: none;
+            padding: 12px 0;
+            width: 100%;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+        .login-box .btn-primary:active { transform: scale(0.97); opacity: 0.8; }
+        .login-box .status { font-size: 14px; margin-top: 10px; color: #6B8A7A; }
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .toolbar .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .toolbar .btn:active { transform: scale(0.97); }
+        .toolbar .btn-save { background: #2A4B41; color: white; }
+        .toolbar .btn-add { background: #D49B6B; color: white; }
+        .toolbar .btn-refresh { background: #E2E8E4; color: #2A4B41; }
+        .toolbar .btn-save:disabled { opacity: 0.5; pointer-events: none; }
+        .toast {
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            font-weight: 500;
+            display: none;
+        }
+        .toast.show { display: block; }
+        .toast.success { background: #D4EDDA; color: #155724; border-left: 4px solid #28A745; }
+        .toast.error { background: #F8DDDD; color: #B33C3C; border-left: 4px solid #B33C3C; }
+        .toast.info { background: #D1ECF1; color: #0C5460; border-left: 4px solid #17A2B8; }
+
+        .course-list { display: flex; flex-direction: column; gap: 12px; }
+        .course-item {
+            background: white;
+            border-radius: 16px;
+            padding: 16px 18px;
+            box-shadow: 0 4px 12px rgba(42, 75, 65, 0.06);
+            border-left: 4px solid #D49B6B;
+            transition: 0.2s;
+        }
+        .course-item.sabbath-item { border-left-color: #B8A188; background: #FAF7F2; }
+        .course-item .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .course-item .item-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: #2A4B41;
+        }
+        .course-item .item-title .sabbath-tag {
+            background: #B8A188;
+            color: white;
+            font-size: 10px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+        .course-item .item-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .course-item .item-actions button {
+            border: none;
+            background: #F4F0EA;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #2A4B41;
+            transition: 0.15s;
+        }
+        .course-item .item-actions button:active { transform: scale(0.95); }
+        .course-item .item-actions .btn-edit { background: #DCE9E3; }
+        .course-item .item-actions .btn-delete { background: #F8DDDD; color: #B33C3C; }
+        .course-item .item-actions .btn-move { background: #E8DFD4; }
+
+        .edit-form {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 2px dashed #E2E8E4;
+            display: none;
+        }
+        .edit-form.open { display: block; }
+        .edit-form label { display: block; font-weight: 600; font-size: 13px; margin-top: 10px; margin-bottom: 3px; color: #5B4B3A; }
+        .edit-form input, .edit-form textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #E2E8E4;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+        .edit-form input:focus, .edit-form textarea:focus {
+            outline: none;
+            border-color: #D49B6B;
+        }
+        .edit-form textarea { min-height: 80px; resize: vertical; }
+        .edit-form .form-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+        .edit-form .form-row label { margin-top: 0; display: flex; align-items: center; gap: 6px; font-weight: 400; }
+        .edit-form .form-row input[type="checkbox"] { width: 18px; height: 18px; }
+        .edit-form .btn-save-item {
+            background: #2A4B41;
+            color: white;
+            border: none;
+            padding: 10px 0;
+            width: 100%;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 14px;
+        }
+        .edit-form .btn-save-item:active { transform: scale(0.97); opacity: 0.8; }
+        .empty-msg { text-align: center; padding: 40px 0; color: #8AA39A; font-size: 16px; }
+        .footer { text-align: center; font-size: 12px; color: #8AA39A; margin-top: 24px; padding-top: 16px; border-top: 1px solid #E2E8E4; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>⚙️ 课程管理 · 晨光书房</h1>
+        <span class="badge">管理者专用</span>
+    </div>
+
+    <!-- 登录区 -->
+    <div class="login-box" id="loginBox">
+        <h3 style="margin-bottom:4px;">🔑 连接 GitHub 仓库</h3>
+        <p style="font-size:14px; color:#6B8A7A; margin-bottom:12px;">需要 GitHub Token 权限（repo）</p>
+        <label>仓库名（如：用户名/仓库名）</label>
+        <input type="text" id="repoInput" placeholder="例如：zhangsan/my-study-tool">
+        <label>GitHub Personal Access Token</label>
+        <input type="password" id="tokenInput" placeholder="输入你的 token">
+        <button class="btn-primary" id="loginBtn">🔗 连接</button>
+        <div class="status" id="loginStatus"></div>
+    </div>
+
+    <!-- 主界面 -->
+    <div id="mainArea" style="display:none;">
+        <div class="toast" id="toast"></div>
+        <div class="toolbar">
+            <button class="btn btn-save" id="saveBtn">💾 保存到 GitHub</button>
+            <button class="btn btn-add" id="addBtn">➕ 添加新课程</button>
+            <button class="btn btn-refresh" id="refreshBtn">🔄 重新加载</button>
+        </div>
+        <div class="course-list" id="courseList"></div>
+    </div>
+    <div class="footer">数据存储在 data.json · 每次保存会创建 commit 记录</div>
+</div>
+
+<script>
+    var repo = '';
+    var token = '';
+    var data = [];
+    var editingIndex = -1;
+    var isSaving = false;
+
+    function $(id) { return document.getElementById(id); }
+
+    function loadSettings() {
+        try {
+            var saved = localStorage.getItem('study_admin_settings');
+            if (saved) {
+                var parsed = JSON.parse(saved);
+                if (parsed.repo) $('repoInput').value = parsed.repo;
+                if (parsed.token) $('tokenInput').value = parsed.token;
+            }
+        } catch(e) {}
+    }
+
+    function saveSettings(repoVal, tokenVal) {
+        try {
+            localStorage.setItem('study_admin_settings', JSON.stringify({ repo: repoVal, token: tokenVal }));
+        } catch(e) {}
+    }
+
+    function showToast(msg, type) {
+        var el = $('toast');
+        el.textContent = msg;
+        el.className = 'toast show ' + type;
+        setTimeout(function() { el.classList.remove('show'); }, 5000);
+    }
+
+    function renderList() {
+        var list = $('courseList');
+        if (!data || data.length === 0) {
+            list.innerHTML = '<div class="empty-msg">📭 暂无课程，点击 "添加新课程" 创建</div>';
+            return;
+        }
+        var html = '';
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            var isSabbath = item.isSabbath === true;
+            html += '<div class="course-item' + (isSabbath ? ' sabbath-item' : '') + '">';
+            html += '<div class="item-header">';
+            html += '<div class="item-title">' + (i+1) + '. ' + item.title;
+            if (isSabbath) html += '<span class="sabbath-tag">🕊️ 安息日</span>';
+            html += '</div>';
+            html += '<div class="item-actions">';
+            if (i > 0) html += '<button class="btn-move" data-action="up" data-idx="' + i + '">⬆ 上移</button>';
+            if (i < data.length - 1) html += '<button class="btn-move" data-action="down" data-idx="' + i + '">⬇ 下移</button>';
+            html += '<button class="btn-edit" data-action="edit" data-idx="' + i + '">✏️ 编辑</button>';
+            html += '<button class="btn-delete" data-action="delete" data-idx="' + i + '">🗑️ 删除</button>';
+            html += '</div></div>';
+            // 编辑表单
+            var isOpen = (editingIndex === i);
+            html += '<div class="edit-form' + (isOpen ? ' open' : '') + '" data-idx="' + i + '">';
+            html += '<label>标题</label><input type="text" class="edit-title" value="' + escapeHtml(item.title) + '">';
+            html += '<label>正文（支持 HTML）</label><textarea class="edit-reading">' + escapeHtml(item.reading || '') + '</textarea>';
+            html += '<label>钩子问题</label><textarea class="edit-hook">' + escapeHtml(item.hook || '') + '</textarea>';
+            html += '<div class="form-row"><label><input type="checkbox" class="edit-sabbath"' + (isSabbath ? ' checked' : '') + '> 🕊️ 标记为安息日（休息日）</label></div>';
+            html += '<button class="btn-save-item" data-action="save-edit" data-idx="' + i + '">✅ 保存此课</button>';
+            html += '</div>';
+            html += '</div>';
+        }
+        list.innerHTML = html;
+        // 绑定事件
+        list.querySelectorAll('[data-action]').forEach(function(btn) {
+            btn.onclick = function() {
+                var action = this.dataset.action;
+                var idx = parseInt(this.dataset.idx);
+                if (action === 'edit') {
+                    editingIndex = (editingIndex === idx) ? -1 : idx;
+                    renderList();
+                } else if (action === 'delete') {
+                    if (confirm('确定要删除第 ' + (idx+1) + ' 课吗？此操作不可撤销（除非通过 GitHub 历史回滚）。')) {
+                        data.splice(idx, 1);
+                        renumberDays();
+                        renderList();
+                        showToast('已删除，点击"保存到 GitHub" 生效', 'info');
+                    }
+                } else if (action === 'up') {
+                    if (idx > 0) { var temp = data[idx]; data[idx] = data[idx-1]; data[idx-1] = temp; renumberDays(); renderList(); }
+                } else if (action === 'down') {
+                    if (idx < data.length - 1) { var temp = data[idx]; data[idx] = data[idx+1]; data[idx+1] = temp; renumberDays(); renderList(); }
+                } else if (action === 'save-edit') {
+                    saveItemEdit(idx);
+                }
+            };
+        });
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function unescapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    }
+
+    function saveItemEdit(idx) {
+        var container = document.querySelector('.edit-form[data-idx="' + idx + '"]');
+        if (!container) return;
+        var title = container.querySelector('.edit-title').value.trim();
+        var reading = container.querySelector('.edit-reading').value;
+        var hook = container.querySelector('.edit-hook').value.trim();
+        var isSabbath = container.querySelector('.edit-sabbath').checked;
+        if (!title) { alert('标题不能为空'); return; }
+        data[idx].title = title;
+        data[idx].reading = reading;
+        data[idx].hook = hook;
+        data[idx].isSabbath = isSabbath;
+        editingIndex = -1;
+        renderList();
+        showToast('已更新第 ' + (idx+1) + ' 课，点击"保存到 GitHub" 生效', 'info');
+    }
+
+    function renumberDays() {
+        for (var i = 0; i < data.length; i++) {
+            data[i].day = i + 1;
+        }
+    }
+
+    function loadData() {
+        fetch('data.json')
+            .then(function(res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            })
+            .then(function(json) {
+                data = json;
+                renumberDays();
+                renderList();
+                showToast('✅ 数据加载成功，共 ' + data.length + ' 课', 'success');
+            })
+            .catch(function(err) {
+                showToast('❌ 加载 data.json 失败：' + err.message, 'error');
+                data = [];
+                renderList();
+            });
+    }
+
+    function saveToGitHub() {
+        if (isSaving) return;
+        if (!repo || !token) {
+            showToast('❌ 请先连接 GitHub', 'error');
+            return;
+        }
+        isSaving = true;
+        var btn = $('saveBtn');
+        btn.disabled = true;
+        btn.textContent = '⏳ 保存中...';
+        showToast('⏳ 正在保存到 GitHub...', 'info');
+
+        var content = JSON.stringify(data, null, 2);
+        var encoded = btoa(unescape(encodeURIComponent(content)));
+
+        var url = 'https://api.github.com/repos/' + repo + '/contents/data.json';
+
+        // 先获取文件的 SHA
+        fetch(url, {
+            headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }
+        })
+        .then(function(res) {
+            if (res.status === 404) {
+                // 文件不存在，直接创建
+                return { sha: null };
+            }
+            if (!res.ok) throw new Error('获取文件信息失败：' + res.status);
+            return res.json();
+        })
+        .then(function(fileInfo) {
+            var payload = {
+                message: '📝 通过管理后台更新课程数据',
+                content: encoded,
+                branch: 'main'
+            };
+            if (fileInfo && fileInfo.sha) {
+                payload.sha = fileInfo.sha;
+            }
+            return fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'token ' + token,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+        })
+        .then(function(res) {
+            if (!res.ok) {
+                return res.json().then(function(errData) {
+                    throw new Error(errData.message || '保存失败：' + res.status);
+                });
+            }
+            return res.json();
+        })
+        .then(function() {
+            showToast('✅ 保存成功！GitHub Pages 将在 1-2 分钟内自动部署', 'success');
+            btn.textContent = '💾 保存到 GitHub';
+            btn.disabled = false;
+            isSaving = false;
+        })
+        .catch(function(err) {
+            showToast('❌ 保存失败：' + err.message, 'error');
+            btn.textContent = '💾 保存到 GitHub';
+            btn.disabled = false;
+            isSaving = false;
+        });
+    }
+
+    function addNewCourse() {
+        data.push({
+            day: data.length + 1,
+            title: '新课程 ' + (data.length + 1),
+            reading: '<p>在这里输入正文内容...</p>',
+            hook: '在这里输入钩子问题...',
+            isSabbath: false
+        });
+        editingIndex = data.length - 1;
+        renderList();
+        showToast('已添加新课程，填写内容后点击"保存此课"，再点击"保存到 GitHub"', 'info');
+    }
+
+    function init() {
+        loadSettings();
+        $('loginBtn').onclick = function() {
+            repo = $('repoInput').value.trim();
+            token = $('tokenInput').value.trim();
+            if (!repo || !token) {
+                $('loginStatus').textContent = '⚠️ 请填写仓库名和 Token';
+                return;
+            }
+            saveSettings(repo, token);
+            $('loginStatus').textContent = '✅ 验证中...';
+            // 简单验证 token 是否有效
+            fetch('https://api.github.com/user', {
+                headers: { 'Authorization': 'token ' + token }
+            })
+            .then(function(res) {
+                if (!res.ok) throw new Error('Token 无效或已过期');
+                return res.json();
+            })
+            .then(function() {
+                $('loginStatus').textContent = '✅ 连接成功！';
+                $('loginBox').style.display = 'none';
+                $('mainArea').style.display = 'block';
+                loadData();
+            })
+            .catch(function(err) {
+                $('loginStatus').textContent = '❌ ' + err.message;
+            });
+        };
+
+        $('saveBtn').onclick = saveToGitHub;
+        $('addBtn').onclick = addNewCourse;
+        $('refreshBtn').onclick = function() {
+            loadData();
+            showToast('🔄 已重新加载', 'info');
+        };
+
+        // 如果已保存过设置，自动尝试连接
+        if ($('repoInput').value && $('tokenInput').value) {
+            // 不自动登录，等待用户点击
+        }
+    }
+
+    init();
+</script>
+</body>
+</html>
