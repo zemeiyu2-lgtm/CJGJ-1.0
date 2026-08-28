@@ -286,7 +286,7 @@
             display: block;
         }
 
-        /* ===== 原有样式（完整保留） ===== */
+        /* ===== 原有样式 ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -467,6 +467,8 @@
             color: #8AA39A;
             margin-top: 4px;
         }
+
+        /* ===== 阅读区 ===== */
         .reading-text {
             font-size: 16px;
             line-height: 1.9;
@@ -498,6 +500,34 @@
             color: #D49B6B;
             font-weight: 700;
         }
+
+        /* ===== 经文显示区 ===== */
+        .bible-block {
+            background: #F4F9F6;
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin: 16px 0 8px 0;
+            border-left: 4px solid #2A4B41;
+        }
+        .bible-block .bible-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #2A4B41;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+        .bible-block .bible-title span {
+            color: #D49B6B;
+        }
+        .bible-block .bible-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #3D5A50;
+            white-space: pre-wrap;
+            font-family: "Georgia", "Times New Roman", serif;
+        }
+
+        /* ===== 按钮 ===== */
         .btn-step {
             background: #D49B6B;
             color: #FCF8F0;
@@ -808,6 +838,11 @@
                         <div class="step-header"><span class="step-num">1</span><span>📖 静读 · 领受</span></div>
                         <div class="step-body">
                             <div class="reading-text" id="readingContent"></div>
+                            <!-- 经文显示区 -->
+                            <div class="bible-block" id="bibleBlock" style="display:none;">
+                                <div class="bible-title">📖 本课经文 · <span>和合本</span></div>
+                                <div class="bible-text" id="bibleText"></div>
+                            </div>
                             <button class="btn-step" id="btnStep1">⏳ 我已读完 (需停留 30 秒)</button>
                             <div style="font-size:13px; color:#8AA39A; margin-top:6px;" id="timerHint">请慢慢阅读，不要着急...</div>
                         </div>
@@ -1253,6 +1288,14 @@
             $('readingContent').innerHTML = data.reading;
             $('hookQuestionText').innerHTML = '🕊️ ' + data.hook;
 
+            // 显示经文
+            if (data.bible && data.bible.trim().length > 0) {
+                $('bibleBlock').style.display = 'block';
+                $('bibleText').textContent = data.bible;
+            } else {
+                $('bibleBlock').style.display = 'none';
+            }
+
             if (!state.steps[1].completed && !isSabbathDay(index)) {
                 timerSeconds = 0;
                 state.steps[1].timerDone = false;
@@ -1601,7 +1644,6 @@
             $('welcomeLoading').textContent = '⏳ 正在连接...';
 
             try {
-                // 1. 尝试匿名登录
                 var { data, error } = await supabase.auth.signInAnonymously();
 
                 if (error) {
@@ -1620,17 +1662,12 @@
                 currentUser = data.user;
                 isAnon = true;
 
-                // 2. 从云端加载进度
                 await loadProgressFromCloud();
-
-                // 3. 加载课程数据
                 await loadCourseData();
 
-                // 4. 隐藏欢迎页，显示学习页
                 $('welcomeArea').classList.add('hidden');
                 $('studyArea').classList.remove('hidden');
 
-                // 5. 更新用户信息
                 updateUserBar();
 
                 console.log('✅ 匿名登录成功，用户ID:', currentUser.id);
@@ -1643,7 +1680,7 @@
         };
 
         // ============================================================
-        // 绑定账号功能（匿名 → 正式用户）
+        // 绑定账号功能
         // ============================================================
         $('btnBindAccount').onclick = function() {
             $('bindOverlay').classList.add('show');
@@ -1682,7 +1719,6 @@
             $('bindSuccess').className = 'bind-success';
 
             try {
-                // 使用 updateUser 将匿名账号升级为正式账号
                 var { data, error } = await supabase.auth.updateUser({
                     email: email,
                     password: password
@@ -1696,14 +1732,12 @@
                     return;
                 }
 
-                // 绑定成功
                 isAnon = false;
                 currentUser = data.user;
                 $('bindSuccess').textContent = '✅ 绑定成功！进度已同步到你的账号';
                 $('bindSuccess').className = 'bind-success show';
                 updateUserBar();
 
-                // 保存当前进度到新账号
                 await syncProgressToCloud();
 
                 setTimeout(function() {
@@ -1721,22 +1755,19 @@
         };
 
         // ============================================================
-        // 检查已有的会话（刷新页面时恢复）
+        // 检查已有会话
         // ============================================================
         async function checkExistingSession() {
             var { data: { session } } = await supabase.auth.getSession();
 
             if (session && session.user) {
                 currentUser = session.user;
-                // 检测是否为匿名用户
-                // Supabase 匿名用户没有 email，或者有特定标识
                 if (!session.user.email) {
                     isAnon = true;
                 } else {
                     isAnon = false;
                 }
 
-                // 隐藏欢迎页，显示学习页
                 $('welcomeArea').classList.add('hidden');
                 $('studyArea').classList.remove('hidden');
 
@@ -1745,7 +1776,6 @@
                 updateUserBar();
                 console.log('🔄 恢复会话成功，用户:', currentUser.id, isAnon ? '(匿名)' : '(已绑定)');
             } else {
-                // 没有会话，显示欢迎页
                 $('welcomeArea').classList.remove('hidden');
                 $('studyArea').classList.add('hidden');
             }
@@ -1763,7 +1793,7 @@
         // ============================================================
         checkExistingSession();
 
-        console.log('🌱 晨光书房已开启（访客模式）！');
+        console.log('🌱 晨光书房已开启（访客模式 + 经文显示）！');
     </script>
 </body>
 </html>
