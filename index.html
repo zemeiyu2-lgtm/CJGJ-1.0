@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🌱 21天自觉思考 · 晨光书房</title>
+    <title>🌱 自觉书房 · 学习端</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
             background: #E8F3EE;
@@ -17,28 +13,15 @@
             padding: 20px 16px 100px 16px;
             min-height: 100vh;
         }
-        .container {
-            max-width: 460px;
-            margin: 0 auto;
-        }
-
+        .container { max-width: 460px; margin: 0 auto; }
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
         }
-        .header h1 {
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: #2A4B41;
-        }
-        .header h1 span {
-            font-weight: 300;
-            font-size: 16px;
-            color: #6B8A7A;
-        }
+        .header h1 { font-size: 22px; font-weight: 700; letter-spacing: 1px; color: #2A4B41; }
+        .header h1 span { font-weight: 300; font-size: 16px; color: #6B8A7A; }
         .badge-day {
             background: #D49B6B;
             color: #FCF8F0;
@@ -48,7 +31,6 @@
             font-weight: 600;
             box-shadow: 0 2px 8px rgba(212, 155, 107, 0.3);
         }
-
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -85,9 +67,7 @@
             transform: scale(1.05);
             font-weight: 700;
         }
-        .day-dot.future {
-            opacity: 0.5;
-        }
+        .day-dot.future { opacity: 0.5; }
         .day-dot.sabbath {
             background: #F0E5D8;
             color: #B8A188;
@@ -99,7 +79,6 @@
             color: #5B4B3A;
             border-color: #B8A188;
         }
-
         .main-card {
             background: #FCF8F0;
             border-radius: 28px;
@@ -108,12 +87,7 @@
             margin-bottom: 20px;
             border: 1px solid rgba(255, 255, 255, 0.5);
         }
-        .day-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: #2A4B41;
-        }
+        .day-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; color: #2A4B41; }
         .day-sub {
             font-size: 14px;
             color: #6B8A7A;
@@ -123,7 +97,6 @@
             display: flex;
             justify-content: space-between;
         }
-
         .step-block {
             background: #F4F9F6;
             border-radius: 16px;
@@ -134,10 +107,7 @@
             opacity: 0.6;
             pointer-events: none;
         }
-        .step-block.unlocked {
-            opacity: 1;
-            pointer-events: auto;
-        }
+        .step-block.unlocked { opacity: 1; pointer-events: auto; }
         .step-block.completed {
             border-left-color: #2A4B41;
             background: #E8F3EE;
@@ -164,18 +134,9 @@
             font-size: 13px;
             flex-shrink: 0;
         }
-        .step-block.completed .step-num {
-            background: #2A4B41;
-        }
-        .step-body {
-            padding-left: 34px;
-        }
-        .step-body p {
-            font-size: 15px;
-            line-height: 1.6;
-            color: #3D5A50;
-            margin-bottom: 10px;
-        }
+        .step-block.completed .step-num { background: #2A4B41; }
+        .step-body { padding-left: 34px; }
+        .step-body p { font-size: 15px; line-height: 1.6; color: #3D5A50; margin-bottom: 10px; }
         .step-body textarea {
             width: 100%;
             border: 1px solid #D3E0D9;
@@ -194,27 +155,10 @@
             border-color: #D49B6B;
             box-shadow: 0 0 0 3px rgba(212, 155, 107, 0.15);
         }
-        .step-body textarea:disabled {
-            background: #F4F9F6;
-            color: #8AA39A;
-        }
-        .char-counter {
-            text-align: right;
-            font-size: 12px;
-            color: #8AA39A;
-            margin-top: 4px;
-        }
-
-        .reading-text {
-            font-size: 16px;
-            line-height: 1.9;
-            color: #2A4B41;
-            padding: 6px 0;
-        }
-        .reading-text p {
-            margin-bottom: 14px;
-            text-indent: 2em;
-        }
+        .step-body textarea:disabled { background: #F4F9F6; color: #8AA39A; }
+        .char-counter { text-align: right; font-size: 12px; color: #8AA39A; margin-top: 4px; }
+        .reading-text { font-size: 16px; line-height: 1.9; color: #2A4B41; padding: 6px 0; }
+        .reading-text p { margin-bottom: 14px; text-indent: 2em; }
         .reading-text .highlight-block {
             background: #DCE9E3;
             padding: 12px 16px;
@@ -224,19 +168,9 @@
             font-size: 0.95em;
             text-indent: 0;
         }
-        .reading-text ul {
-            padding-left: 20px;
-            line-height: 2;
-        }
-        .reading-text ul li {
-            list-style-type: none;
-        }
-        .reading-text ul li::before {
-            content: "• ";
-            color: #D49B6B;
-            font-weight: 700;
-        }
-
+        .reading-text ul { padding-left: 20px; line-height: 2; }
+        .reading-text ul li { list-style-type: none; }
+        .reading-text ul li::before { content: "• "; color: #D49B6B; font-weight: 700; }
         .btn-step {
             background: #D49B6B;
             color: #FCF8F0;
@@ -251,20 +185,9 @@
             box-shadow: 0 4px 10px rgba(212, 155, 107, 0.2);
             width: 100%;
         }
-        .btn-step:active {
-            transform: scale(0.97);
-            opacity: 0.8;
-        }
-        .btn-step:disabled {
-            opacity: 0.4;
-            box-shadow: none;
-            pointer-events: none;
-        }
-        .btn-step.complete-btn {
-            background: #2A4B41;
-            box-shadow: 0 4px 10px rgba(42, 75, 65, 0.2);
-        }
-
+        .btn-step:active { transform: scale(0.97); opacity: 0.8; }
+        .btn-step:disabled { opacity: 0.4; box-shadow: none; pointer-events: none; }
+        .btn-step.complete-btn { background: #2A4B41; box-shadow: 0 4px 10px rgba(42, 75, 65, 0.2); }
         .progress-ring-wrap {
             display: flex;
             align-items: center;
@@ -273,19 +196,9 @@
             padding-top: 12px;
             border-top: 2px solid #E8F3EE;
         }
-        .ring-container {
-            position: relative;
-            width: 60px;
-            height: 60px;
-        }
-        .ring-container svg {
-            transform: rotate(-90deg);
-        }
-        .ring-bg {
-            fill: none;
-            stroke: #E2E8E4;
-            stroke-width: 6;
-        }
+        .ring-container { position: relative; width: 60px; height: 60px; }
+        .ring-container svg { transform: rotate(-90deg); }
+        .ring-bg { fill: none; stroke: #E2E8E4; stroke-width: 6; }
         .ring-progress {
             fill: none;
             stroke: #2A4B41;
@@ -304,12 +217,7 @@
             font-weight: 700;
             color: #2A4B41;
         }
-        .progress-text {
-            font-size: 15px;
-            color: #6B8A7A;
-            font-weight: 500;
-        }
-
+        .progress-text { font-size: 15px; color: #6B8A7A; font-weight: 500; }
         .modal-overlay {
             display: none;
             position: fixed;
@@ -325,9 +233,7 @@
             padding: 30px;
             animation: fadeIn 0.3s;
         }
-        .modal-overlay.show {
-            display: flex;
-        }
+        .modal-overlay.show { display: flex; }
         .modal-box {
             background: #FCF8F0;
             max-width: 380px;
@@ -338,15 +244,8 @@
             text-align: center;
             animation: scaleUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .modal-box .emoji-big {
-            font-size: 48px;
-            margin-bottom: 8px;
-        }
-        .modal-box h3 {
-            font-size: 20px;
-            color: #2A4B41;
-            margin-bottom: 6px;
-        }
+        .modal-box .emoji-big { font-size: 48px; margin-bottom: 8px; }
+        .modal-box h3 { font-size: 20px; color: #2A4B41; margin-bottom: 6px; }
         .modal-box .verse {
             font-size: 17px;
             line-height: 1.6;
@@ -359,15 +258,7 @@
             border-left: 4px solid #D49B6B;
             text-align: left;
         }
-        .modal-box .verse-ref {
-            text-align: right;
-            font-size: 14px;
-            font-weight: 600;
-            color: #D49B6B;
-            margin-top: -10px;
-            margin-bottom: 12px;
-            font-style: normal;
-        }
+        .modal-box .verse-ref { text-align: right; font-size: 14px; font-weight: 600; color: #D49B6B; margin-top: -10px; margin-bottom: 12px; font-style: normal; }
         .modal-box .btn-modal {
             background: #2A4B41;
             color: #FCF8F0;
@@ -380,10 +271,7 @@
             cursor: pointer;
             transition: 0.15s;
         }
-        .modal-box .btn-modal:active {
-            transform: scale(0.97);
-        }
-
+        .modal-box .btn-modal:active { transform: scale(0.97); }
         .star-burst {
             position: fixed;
             pointer-events: none;
@@ -395,121 +283,111 @@
             0% { opacity: 1; transform: translateY(0) scale(0.5) rotate(0deg); }
             100% { opacity: 0; transform: translateY(-200px) scale(1.5) rotate(40deg); }
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleUp { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+        .sabbath-mode .step-block { opacity: 0.5; pointer-events: none; }
+        .sabbath-mode .step-block.unlocked { opacity: 0.5; pointer-events: none; }
+        .sabbath-mode .btn-step { display: none; }
+        .sabbath-mode .progress-ring-wrap { display: none; }
+        .sabbath-mode #btnCompleteDay { display: none; }
+        .loading-overlay {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 0;
+            font-size: 18px;
+            color: #6B8A7A;
         }
-        @keyframes scaleUp {
-            from { opacity: 0; transform: scale(0.85); }
-            to { opacity: 1; transform: scale(1); }
+        .loading-overlay .spinner {
+            width: 30px;
+            height: 30px;
+            border: 4px solid #E2E8E4;
+            border-top-color: #2A4B41;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 14px;
         }
-
-        .sabbath-mode .step-block {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        .sabbath-mode .step-block.unlocked {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        .sabbath-mode .btn-step {
-            display: none;
-        }
-        .sabbath-mode .progress-ring-wrap {
-            display: none;
-        }
-        .sabbath-mode #btnCompleteDay {
-            display: none;
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .error-msg {
+            background: #F8DDDD;
+            color: #B33C3C;
+            padding: 16px 20px;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            border-left: 4px solid #B33C3C;
         }
     </style>
 </head>
 <body>
     <div class="container">
-
         <div class="header">
             <h1>🌱 晨光<span>· 自觉书房</span></h1>
-            <span class="badge-day" id="dayBadge">第 1 / 24 天</span>
+            <span class="badge-day" id="dayBadge">加载中...</span>
         </div>
-
         <div class="calendar-grid" id="calendarGrid"></div>
-
         <div class="main-card" id="mainCard">
-            <div class="day-title" id="dayTitle">加载中...</div>
-            <div class="day-sub">
-                <span id="daySubDate">📅 第 1 课</span>
-                <span class="day-sub-status" id="daySubStatus">🌱 未开始</span>
-            </div>
-
-            <div class="step-block" id="step1">
-                <div class="step-header">
-                    <span class="step-num">1</span>
-                    <span>📖 静读 · 领受</span>
-                </div>
-                <div class="step-body">
-                    <div class="reading-text" id="readingContent"></div>
-                    <button class="btn-step" id="btnStep1">⏳ 我已读完 (需停留 30 秒)</button>
-                    <div style="font-size:13px; color:#8AA39A; margin-top:6px;" id="timerHint">请慢慢阅读，不要着急...</div>
+            <div id="loadingArea">
+                <div class="loading-overlay">
+                    <div class="spinner"></div>
+                    <span>📖 正在加载课程数据...</span>
                 </div>
             </div>
-
-            <div class="step-block" id="step2">
-                <div class="step-header">
-                    <span class="step-num">2</span>
-                    <span>🎯 捕获 · 触动</span>
+            <div id="contentArea" style="display:none;">
+                <div class="day-title" id="dayTitle"></div>
+                <div class="day-sub">
+                    <span id="daySubDate"></span>
+                    <span class="day-sub-status" id="daySubStatus">🌱 未开始</span>
                 </div>
-                <div class="step-body">
-                    <p>✍️ 哪句话最触动你？把它摘录下来：</p>
-                    <textarea id="inputStep2" placeholder="例如：'你们中间若有缺少智慧的，应当求那厚赐众人的神...'" disabled></textarea>
-                    <div class="char-counter"><span id="count2">0</span> / 至少 10 字</div>
-                    <button class="btn-step" id="btnStep2" disabled>✅ 确认捕获</button>
+                <div class="step-block" id="step1">
+                    <div class="step-header"><span class="step-num">1</span><span>📖 静读 · 领受</span></div>
+                    <div class="step-body">
+                        <div class="reading-text" id="readingContent"></div>
+                        <button class="btn-step" id="btnStep1">⏳ 我已读完 (需停留 30 秒)</button>
+                        <div style="font-size:13px; color:#8AA39A; margin-top:6px;" id="timerHint">请慢慢阅读，不要着急...</div>
+                    </div>
                 </div>
+                <div class="step-block" id="step2">
+                    <div class="step-header"><span class="step-num">2</span><span>🎯 捕获 · 触动</span></div>
+                    <div class="step-body">
+                        <p>✍️ 哪句话最触动你？把它摘录下来：</p>
+                        <textarea id="inputStep2" placeholder="例如：'你们中间若有缺少智慧的，应当求那厚赐众人的神...'" disabled></textarea>
+                        <div class="char-counter"><span id="count2">0</span> / 至少 10 字</div>
+                        <button class="btn-step" id="btnStep2" disabled>✅ 确认捕获</button>
+                    </div>
+                </div>
+                <div class="step-block" id="step3">
+                    <div class="step-header"><span class="step-num">3</span><span>🔗 联结 · 内化</span></div>
+                    <div class="step-body">
+                        <p>💭 这让我想起自己经历或认知中的什么？</p>
+                        <textarea id="inputStep3" placeholder="请写下一段真实的联想（至少10个字）..." disabled></textarea>
+                        <div class="char-counter"><span id="count3">0</span> / 至少 10 字</div>
+                        <button class="btn-step" id="btnStep3" disabled>✅ 确认联结</button>
+                    </div>
+                </div>
+                <div class="step-block" id="step4">
+                    <div class="step-header"><span class="step-num">4</span><span>🕊️ 追问 · 应用</span></div>
+                    <div class="step-body">
+                        <p id="hookQuestionText">加载钩子问题...</p>
+                        <textarea id="inputStep4" placeholder="请写下你的行动回应（至少10个字）..." disabled></textarea>
+                        <div class="char-counter"><span id="count4">0</span> / 至少 10 字</div>
+                        <button class="btn-step" id="btnStep4" disabled>✅ 确认应用</button>
+                    </div>
+                </div>
+                <div class="progress-ring-wrap">
+                    <div class="ring-container">
+                        <svg viewBox="0 0 48 48" width="60" height="60">
+                            <circle class="ring-bg" cx="24" cy="24" r="22"></circle>
+                            <circle class="ring-progress" id="ringProgress" cx="24" cy="24" r="22"></circle>
+                        </svg>
+                        <div class="ring-label" id="ringLabel">0%</div>
+                    </div>
+                    <div class="progress-text" id="progressText">今日 0 / 4 步</div>
+                </div>
+                <button class="btn-step complete-btn" id="btnCompleteDay" disabled>🔒 完成今日学习</button>
             </div>
-
-            <div class="step-block" id="step3">
-                <div class="step-header">
-                    <span class="step-num">3</span>
-                    <span>🔗 联结 · 内化</span>
-                </div>
-                <div class="step-body">
-                    <p>💭 这让我想起自己经历或认知中的什么？</p>
-                    <textarea id="inputStep3" placeholder="请写下一段真实的联想（至少10个字）..." disabled></textarea>
-                    <div class="char-counter"><span id="count3">0</span> / 至少 10 字</div>
-                    <button class="btn-step" id="btnStep3" disabled>✅ 确认联结</button>
-                </div>
-            </div>
-
-            <div class="step-block" id="step4">
-                <div class="step-header">
-                    <span class="step-num">4</span>
-                    <span>🕊️ 追问 · 应用</span>
-                </div>
-                <div class="step-body">
-                    <p id="hookQuestionText">加载钩子问题...</p>
-                    <textarea id="inputStep4" placeholder="请写下你的行动回应（至少10个字）..." disabled></textarea>
-                    <div class="char-counter"><span id="count4">0</span> / 至少 10 字</div>
-                    <button class="btn-step" id="btnStep4" disabled>✅ 确认应用</button>
-                </div>
-            </div>
-
-            <div class="progress-ring-wrap">
-                <div class="ring-container">
-                    <svg viewBox="0 0 48 48" width="60" height="60">
-                        <circle class="ring-bg" cx="24" cy="24" r="22"></circle>
-                        <circle class="ring-progress" id="ringProgress" cx="24" cy="24" r="22"></circle>
-                    </svg>
-                    <div class="ring-label" id="ringLabel">0%</div>
-                </div>
-                <div class="progress-text" id="progressText">今日 0 / 4 步</div>
-            </div>
-
-            <button class="btn-step complete-btn" id="btnCompleteDay" disabled>🔒 完成今日学习</button>
         </div>
-
-        <div style="text-align:center; font-size:13px; color:#8AA39A; margin-top:10px;">
-            进度自动保存 · 祢的话是我脚前的灯
-        </div>
+        <div style="text-align:center; font-size:13px; color:#8AA39A; margin-top:10px;">进度自动保存 · 祢的话是我脚前的灯</div>
     </div>
-
     <div class="modal-overlay" id="celebrationModal">
         <div class="modal-box">
             <div class="emoji-big" id="modalEmoji">⭐</div>
@@ -519,35 +397,7 @@
             <button class="btn-modal" id="modalBtn">❤️ 阿们，继续前行</button>
         </div>
     </div>
-
     <script>
-        var courseData = [
-            { day: 1, title: "第1课 · 认识雅各：从怀疑到仆人的蜕变", reading: '<p>雅各书的作者，是主耶稣肉身的兄弟。他曾经不信耶稣（约7:5），但在主复活后向他显现，他彻底改变，成为耶路撒冷教会的领袖（加2:9，徒15:13-33）。</p><p>雅各不自称"主的兄弟"，而自称"神和主耶稣基督的仆人"（雅1:1）。在希腊文中，"仆人"就是"奴仆"的意思——完全属于主人，没有自己的主权。</p><div class="highlight-block">✨ 关键洞察：与他同称"仆人"的还有保罗、彼得、犹大。这不是自贬，而是灵命成熟的标记。一个不成熟的人是自我中心的，一个成熟的人是甘愿为仆的。</div><p>传说雅各因跪着长期祷告，膝盖起了厚茧。主后62年，他从圣殿顶被扔下，又被棍打死。殉道前，他像主一样祷告："父啊，赦免他们，因为他们所作的他们不晓得。"</p>', hook: "雅各从不信主的兄弟变成甘心为仆的人。在你的信仰历程中，有没有一个转折点让你对主的认识发生了根本改变？" },
-            { day: 2, title: "第2课 · 试炼中的大喜乐", reading: '<p>雅各没有说"如果你们遇见试炼"，而是说"你们落在百般试炼中"——因为基督徒必定会遇到试炼。耶稣说："在世上你们有苦难"（约16:33）。保罗也说："我们进入神的国，必须经历许多艰难"（徒14:22）。</p><p>试炼是"百般的"——各种各样的：疾病、意外、失望、逼迫。有些是因为我们是人而有的，有些是因为我们是基督徒而有的。</p><p>但雅各的命令是："<strong>都要以为大喜乐</strong>"。这不是说试炼本身是快乐的，而是说我们可以在试炼中喜乐，因为我们知道——信心经过试炼，就生忍耐；忍耐当成功，就使我们"成全完备，毫无缺欠"。</p><div class="highlight-block">✨ 关键洞察："忍耐"在希腊原文中的意思是"在重压之下坚定不移"。不是被动忍受，而是主动坚持。就像运动员在阻力训练中变强，我们的信心在试炼中被炼净。</div>', hook: "你正在经历或最近经历过什么试炼？如果雅各说要以为大喜乐，你觉得自己最难认同的是什么？" },
-            { day: 3, title: "第3课 · 求智慧的祷告", reading: '<p>"你们中间若有缺少智慧的，应当求那厚赐与众人、也不斥责人的神，主就必赐给他。"（雅1:5）</p><p>这里有一个重要的区别：<strong>"知识"</strong>是资料的积累，<strong>"智慧"</strong>是知道如何正确运用知识。许多人读了圣经，却不知道如何应用——这就是缺少智慧。</p><p>所罗门求智慧，神喜悦他（王上3:7-12）。神应许"厚赐"——慷慨地给；"不斥责"——不会因为你求而责备你。</p><div class="highlight-block">✨ 关键洞察：但有一个条件——凭着信心求，一点不疑惑。疑惑的人就像海中的波浪，被风吹动翻腾。这样的人不要想从主那里得什么。</div>', hook: "你最近是否在某个具体处境中不知道该怎么办？如果今天你向神求智慧，你最需要祂指引的是哪一件事？" },
-            { day: 4, title: "第4课 · 贫穷与富足的试炼", reading: '<p>雅各提到两种极端处境："贫穷"和"富足"——两者都是试炼。</p><p><strong>贫穷</strong>的试炼是：可能使人咒骂神。约伯失去一切时，妻子说："你弃掉神，死吧！"（伯2:9）但雅各说：贫穷的弟兄该喜乐，因为神拣选了世上的贫穷人，叫他们在信心上富足（雅2:5）。福音首先临到穷人（路4:18），在基督里，贫穷的奴仆成了"自由人"（林前7:21-22）。</p><p><strong>富足</strong>的试炼是：可能使人忘记神（申8:10-14）。雅各说：富足的人该喜乐，因为他被降卑了——财富不能买灵魂的赎价（诗49:6-9）。富足如草上的花，太阳出来一晒就枯干。</p><div class="highlight-block">✨ 关键洞察：重要的不是"你有多少"，而是"你在信心上有多富足"。</div>', hook: "你目前更靠近贫穷还是富足的处境？在这个处境中，你最容易犯的属灵危险是什么？" },
-            { day: 5, title: "第5课 · 面对试探：罪的形成", reading: '<p>"<strong>忍受试探的人是有福的</strong>，因为他经过试验以后，必得生命的冠冕。"（雅1:12）</p><p>但要注意："人被试探，不可说\'我是被神试探\'"——神不试探人。试探的来源是：<strong>私欲 + 机会 = 试探；私欲 + 机会 + 行动 = 罪；罪 + 不悔改 = 死亡</strong>。</p><p>受试探本身不是罪——耶稣也受过试探，却没有犯罪（来4:15）。试探变成罪，是在我们"妥协、行动"的那一刻。</p><div class="highlight-block">✨ 关键洞察：胜过罪有四个步骤——①改变私欲；②限制机会；③操练节制；④恳求赦免。</div>', hook: "你最容易妥协的试探是什么？在私欲、机会、行动、不悔改这四个环节中，你最需要在哪一个环节截断罪的链条？" },
-            { day: 6, title: "第6课 · 快听、慢说、慢动怒", reading: '<p>"你们各人要快快地听，慢慢地说，慢慢地动怒。因为人的怒气并不成就神的义。"（雅1:19-20）</p><p><strong>"快快地听"</strong>——不是指"速度"，而是"态度"：迫切地、主动地聆听神的话语和别人的需要。</p><p><strong>"慢慢地说"</strong>——谨慎言语，不急于表达。箴言说："多言多语难免有过；禁止嘴唇是有智慧。"（箴10:19）</p><p><strong>"慢慢地动怒"</strong>——"怒气"和"忿怒"在圣经中常被当作小罪，但雅各说它不能成就神的义。</p><div class="highlight-block">✨ 关键洞察：保罗说："生气却不要犯罪，不可含怒到日落。"（弗4:26）如果怒从心起，要控制它不变成恶行，并在日落前消除——否则就给魔鬼留地步。</div>', hook: "回想最近一次你动怒的经历。你的怒气是因为神的荣耀还是自己的面子？" },
-            { day: 7, title: "🕊️ 安息日 · 默想与回顾", reading: '<p style="text-align:center;font-size:1.2em;"><strong>"你们要休息，要知道我是神。"</strong><br>—— 诗篇 46:10</p><p>今天是安息日，不学习新内容。请回顾本周学习的六课：</p><ul><li>第1课 · 认识雅各</li><li>第2课 · 试炼中的大喜乐</li><li>第3课 · 求智慧的祷告</li><li>第4课 · 贫穷与富足的试炼</li><li>第5课 · 面对试探</li><li>第6课 · 快听、慢说、慢动怒</li></ul><div class="highlight-block">🌱 默想指引：找出本周最触动你的一句话或一个词。为什么它触动你？神是否在藉着它对你说话？</div>', hook: "请花10-15分钟安静在神面前，然后写下本周神对你说的最重要的一句话。", isSabbath: true },
-            { day: 8, title: "第7课 · 行道与清洁的虔诚", reading: '<p>"你们要脱去一切的污秽和盈余的邪恶，存温柔的心领受那所栽种的道，就是能救你们灵魂的道。<strong>只是你们要行道，不要单单听道，自己欺哄自己</strong>。"（雅1:21-22）</p><p>雅各用了一个比喻：听道不行道的人，就像人照镜子，看见自己的本相，走后随即忘了。而"详细察看那全备、使人自由之律法"并且实在行出来的人，"就在他所行的事上必然得福"。</p><div class="highlight-block">✨ 关键洞察："在神我们的父面前，那清洁没有玷污的虔诚，就是看顾在患难中的孤儿寡妇，并且保守自己不沾染世俗。"（雅1:27）虔诚不是做礼拜就完了——它是可实行的、有实用价值的、个人的、纯洁的。</div>', hook: "雅各说虔诚包含看顾孤儿寡妇和保守自己不沾染世俗。在这两件事上，你觉得自己在哪方面更需要被提醒？" },
-            { day: 9, title: "第8课 · 不可偏待人", reading: '<p>雅各严厉警告："<strong>不可按着外貌待人</strong>。"（雅2:1）</p><p>在一世纪，社会阶级分明：富人vs穷人、自由人vs奴隶、犹太人vs外邦人。但在基督里，这一切都平等了（加3:28，西3:11）。</p><p>雅各描述了一个场景：一个穿华美衣服的富人和一个穿肮脏衣服的穷人同时进入会堂，你怎样待他们？如果重富轻贫，就是"用恶意断定人"。</p><div class="highlight-block">✨ 关键洞察：为什么不可偏待人？——①这是对荣耀的主的羞辱；②这是藐视神所拣选的人；③我们看重的是那些欺压我们的人；④我们犯了"爱人如己"的至尊律法。</div>', hook: "在你的生活中，你最容易按外貌待人的对象是谁？今天你可以如何操练不偏待人？" },
-            { day: 10, title: "第9课 · 信心若没有行为是死的", reading: '<p>这是雅各书最著名的段落之一："<strong>信心若没有行为就是死的</strong>。"（雅2:17）</p><p>雅各列举了三种信心：<strong>死的信心</strong>（只有理性认同）、<strong>鬼魔的信心</strong>（有理性和感情，没有顺服的意志）、<strong>有生命的信心</strong>（理智+情感+意志，信心与行为并行）。</p><div class="highlight-block">✨ 关键洞察：雅各用两个例子——亚伯拉罕和喇合。一个是犹太人之父，一个是外邦妓女。他们的共同点是：信心都有行为的印证。</div>', hook: "如果你用理智、情感、意志三个维度来衡量自己的信心，你在哪个维度最薄弱？" },
-            { day: 11, title: "第10课 · 制伏舌头", reading: '<p>"原来我们在许多事上都有过失；若有人在话语上没有过失，他就是完全人，也能勒住自己的全身。"（雅3:2）</p><p>舌头是"最小的"肢体，却能说"最大的话"。雅各用了三个比喻：嚼环、船舵、火。</p><div class="highlight-block">✨ 关键洞察：舌头是"不止息的恶物，满了害死人的毒气"。我们用颂赞神的口咒诅人——这是不应当的！一个泉源不能发出甜苦两样的水。</div>', hook: "你的舌头最容易在哪类事上点火？今天你可以如何勒住自己的舌头？" },
-            { day: 12, title: "第11课 · 两种智慧", reading: '<p>"你们中间谁是有智慧、有见识的呢？他就当在智慧的温柔上显出他的善行来。"（雅3:13）</p><p><strong>属地的智慧</strong>——"属地的、属情欲的、属鬼魔的"，带来"扰乱和各样的坏事"。</p><p><strong>属天的智慧</strong>——其特质是：<strong>清洁，和平，温良，柔顺，满有怜悯，多结善果，没有偏见，没有假冒</strong>。</p><div class="highlight-block">✨ 关键洞察：两种智慧结出不同的果子——属地的结出纷争，属天的结出和平与义果。这八种特质，正是基督生命的彰显。</div>', hook: "对照属天智慧的八种特质，你觉得自己在哪一两种特质上最需要被更新？" },
-            { day: 13, title: "第12课 · 争战的根源：与神为敌", reading: '<p>"你们中间的争战、斗殴，是从哪里来的呢？不是从你们百体中战斗之私欲来的吗？"（雅4:1）</p><p>雅各指出三种争战：人与人争、内心之争、人与神争——这是最根本的争战！人之所以与人相争、内心痛苦，是因为<strong>先与神为敌</strong>。</p><div class="highlight-block">✨ 关键洞察："神阻挡骄傲的人，赐恩给谦卑的人。"（雅4:6）谦卑是终止争战的起点。骄傲是撒旦最大的试探，谦卑是终止争战的起点。</div>', hook: "你目前生活中是否有什么争战？雅各说根源是私欲和与神为敌。如果让你在神面前降服一件事，那会是什么？" },
-            { day: 14, title: "🕊️ 安息日 · 默想与回顾", reading: '<p style="text-align:center;font-size:1.2em;"><strong>"凡劳苦担重担的人，可以到我这里来，我就使你们得安息。"</strong><br>—— 马太福音 11:28</p><p>今天是安息日，不学习新内容。请回顾本周学习的六课：</p><ul><li>第7课 · 行道与虔诚</li><li>第8课 · 不可偏待人</li><li>第9课 · 信心与行为</li><li>第10课 · 制伏舌头</li><li>第11课 · 两种智慧</li><li>第12课 · 争战的根源</li></ul><div class="highlight-block">🌱 默想指引：第二周的主题是信心与行为。你的信心是否正在通过行为被显明？</div>', hook: "请花10-15分钟安静在神面前，写下本周神对你说的最重要的一句话。", isSabbath: true },
-            { day: 15, title: "第13课 · 顺服神，抵挡魔鬼", reading: '<p>雅各给出了终止争战的四步行动：<strong>顺服神</strong>、<strong>抵挡魔鬼</strong>、<strong>亲近神</strong>、<strong>谦卑</strong>。</p><p>"你们抵挡魔鬼，魔鬼就必离开你们逃跑了。"（雅4:7）</p><div class="highlight-block">✨ 关键洞察：这四步是一个整体——没有顺服，就没有权柄抵挡；没有谦卑，就没有真正的顺服。魔鬼最怕的不是你的挣扎，而是你的降服。</div>', hook: "在顺服神、抵挡魔鬼、亲近神、谦卑这四步中，你今天最需要操练的是哪一步？" },
-            { day: 16, title: "第14课 · 以神为中心的规划", reading: '<p>"嗐！你们有话说：\'今天、明天我们要往某城里去，在那里住一年，做买卖得利。\'其实明天如何，你们还不知道。"（雅4:13-14）</p><p>雅各不是反对做计划——保罗也计划旅行。雅各反对的是：<strong>不顾神的旨意，凭着自己的骄傲做计划</strong>。</p><div class="highlight-block">✨ 关键洞察："主若愿意，我们就可以活着，也可以做这事，或做那事。"（雅4:15）生命是一片云雾，出现少时就不见了。以神为中心的计划才是智慧。</div>', hook: "你目前正在筹划的某件事中，有没有主权意识的缺失？如果加上主若愿意，你的心态会有何不同？" },
-            { day: 17, title: "第15课 · 神向不义富人的警告", reading: '<p>雅各警告不义的富足人："<strong>你们要哭泣、号咷，因为将有苦难临到你们身上。</strong>"（雅5:1）</p><p>他们犯罪的几方面：<strong>得财富的方法不对</strong>（亏欠工钱）、<strong>处理财富的方法不对</strong>（囤积奢侈）、<strong>利用权势欺压人</strong>。</p><div class="highlight-block">✨ 关键洞察：被欺压者的冤声入了万军之主的耳——神必伸冤。不是有钱就是罪，而是以不义的方法得财、以自私的方式用财、以欺压的手段护财。</div>', hook: "雅各指出三种财富危机：怎么得、怎么用、怎么护。在你当前的财务生活中，哪一方面最需要被光照？" },
-            { day: 18, title: "第16课 · 受欺压时要忍耐", reading: '<p>"弟兄们哪，你们要忍耐，直到主来。"（雅5:7）</p><p>雅各给了三个忍耐的榜样：<strong>农夫</strong>（等候地里宝贵的出产）、<strong>众先知</strong>（能受苦能忍耐）、<strong>约伯</strong>（最终主给他的结局显明主是满心怜悯）。</p><div class="highlight-block">✨ 关键洞察：不要彼此埋怨，不要起誓。忍耐不是消极忍受，而是积极信靠。主来的日子近了。</div>', hook: "在你目前的处境中，你最需要操练忍耐的方面是什么？这三个榜样中，哪一个最能激励你？" },
-            { day: 19, title: "第17课 · 受苦时祷告，喜乐时歌颂", reading: '<p>"你们中间有受苦的呢，他就该祷告；有喜乐的呢，他就该歌颂。"（雅5:13）</p><p><strong>受苦时的责任：祷告</strong>——将重担交托给主。<strong>喜乐时的责任：歌颂</strong>——从心里发出赞美。</p><div class="highlight-block">✨ 关键洞察：如果在地上不歌颂神，到了天堂怎么能加入那昼夜不停的赞美呢？大卫是合神心意的人，他写了无数诗篇歌颂神。</div>', hook: "你现在处于受苦还是喜乐的季节？你今天是否愿意用祷告或歌颂来回应神？" },
-            { day: 20, title: "第18课 · 为病人祷告与认罪", reading: '<p>"你们中间有病了的呢，他就该请教会的长老来，他们可以奉主的名用油抹他，为他祷告。出于信心的祈祷要救那病人，主必叫他起来。"（雅5:14-15）</p><p>抹油是当时普遍的治疗方法，这里强调：长老来，既祷告（属灵关怀），也使用医药（实际关怀）。</p><div class="highlight-block">✨ 关键洞察："义人祈祷所发的力量是大有功效的。"（雅5:16）以利亚与我们是一样性情的人，但他的祷告大有功效，因为他敬畏神、顺服神。</div>', hook: "如果你生病了，你会请教会的长老来为你祷告吗？你认为信心与就医之间是什么关系？" },
-            { day: 21, title: "🕊️ 安息日 · 默想与回顾", reading: '<p style="text-align:center;font-size:1.2em;"><strong>"我的心哪，你要称颂耶和华！凡在我里面的，也要称颂他的圣名！"</strong><br>—— 诗篇 103:1</p><p>今天是安息日，不学习新内容。请回顾本周学习的六课：</p><ul><li>第13课 · 顺服神</li><li>第14课 · 以神为中心的计划</li><li>第15课 · 不义富人的警告</li><li>第16课 · 受欺压时忍耐</li><li>第17课 · 祷告与歌颂</li><li>第18课 · 为病人祷告</li></ul><div class="highlight-block">🌱 默想指引：第三周的主题是顺服与忍耐。你在哪方面需要更深的顺服？</div>', hook: "请花10-15分钟安静在神面前，写下过去三周雅各书对你生命最大的改变。", isSabbath: true },
-            { day: 22, title: "第19课 · 挽回迷失的真道", reading: '<p>"我的弟兄们，你们中间若有失迷真道的，有人使他回转。这人该知道：叫一个罪人从迷路上转回，便是救一个灵魂不死，并且遮盖许多的罪。"（雅5:19-20）</p><p>挽回迷失的弟兄，是每个基督徒的责任（加6:1-2）。</p><div class="highlight-block">✨ 关键洞察：挽回需要正确的态度——属灵的人、温柔的灵、自己小心、愿意分担重担、谦卑、熟悉神的话、忍耐。正确的程序：私下指出→带一两个人同去→告诉教会。</div>', hook: "你身边是否有失迷真道的弟兄姐妹？如果神感动你去挽回一个人，你需要克服的最大障碍是什么？" },
-            { day: 23, title: "第20课 · 全书的回顾：成熟与完全", reading: '<p>雅各书的核心主题是：<strong>灵命长大成熟</strong>。</p><p>雅各在1:4提到"成全完备"——不是指无罪，而是指成长、成熟、完整。</p><p>回顾整卷书，雅各针对的每一个问题，都是不成熟的表现：在试炼中不肯忍耐、只听道不行道、偏待人、不能控制舌头、争竞嫉妒、贪恋世界、在苦难中埋怨。</p><div class="highlight-block">✨ 关键洞察：一个成熟的基督徒是——在试炼中喜乐、在试探中得胜、在言语上有节制、在行为上有信心、在冲突中谦卑、在苦难中忍耐、在祷告中恒切、在爱心上主动。</div>', hook: "回顾这20天的学习，雅各书对你触动最大的一处经文是什么？这个触动是否已经转化为你生活中的改变？" },
-            { day: 24, title: "第21课 · 你是仆人还是主人？", reading: '<p>雅各书的开头："<strong>神和主耶稣基督的仆人雅各</strong>"。结尾："<strong>叫一个罪人从迷路上转回，便是救一个灵魂不死，并且遮盖许多的罪。</strong>"</p><p>全书呼召我们做一件事：<strong>作仆人</strong>。</p><p>作仆人的三个特质：<strong>绝对顺服</strong>、<strong>完全谦卑</strong>、<strong>绝对忠心</strong>。</p><div class="highlight-block">✨ 关键洞察：作仆人，看似是降卑，其实是升高。旧约中被称作神的仆人的伟人有：亚伯拉罕、摩西、约书亚、迦勒、约伯、以赛亚、众先知。仆人这个称呼不是耻辱，而是极大的荣誉。</div><p style="text-align:center;font-size:1.1em;margin-top:16px;"><strong>雅各问我们："神和主耶稣基督的仆人——我们配得这称呼吗？"</strong></p>', hook: "如果主今天问你：你是我的仆人吗？你会如何回答？在你的生活中，有哪一件事可以证明你是在作仆人而不是作主人？" }
-        ];
-
         var bibleVerses = [
             { text: "你的话是我脚前的灯，是我路上的光。", ref: "诗篇 119:105" },
             { text: "我靠着那加给我力量的，凡事都能做。", ref: "腓立比书 4:13" },
@@ -563,48 +413,329 @@
             { text: "你们要将一切的忧虑卸给神，因为他顾念你们。", ref: "彼得前书 5:7" },
             { text: "神所赐出人意外的平安，必在基督耶稣里保守你们的心怀意念。", ref: "腓立比书 4:7" }
         ];
-
+        var courseData = [];
         var state = { currentDay: 0, steps: { 1: { completed: false, timerDone: false }, 2: { completed: false, text: '' }, 3: { completed: false, text: '' }, 4: { completed: false, text: '' } }, completedDays: [] };
+        var timerInterval = null, timerSeconds = 0;
+        var dataLoaded = false;
 
         function $(id) { return document.getElementById(id); }
-
         function shuffleArray(arr) { for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var temp = arr[i]; arr[i] = arr[j]; arr[j] = temp; } return arr; }
-
         function getRandomVerse() { var shuffled = shuffleArray(bibleVerses.slice()); return shuffled[0]; }
-
         function getStepCount() { var c = 0; for (var i = 1; i <= 4; i++) { if (state.steps[i].completed) c++; } return c; }
-
         function getProgressPercent() { return Math.round((getStepCount() / 4) * 100); }
-
         function isSabbathDay(index) { return courseData[index] && courseData[index].isSabbath === true; }
-
         function saveState() { try { localStorage.setItem('soul_study_state', JSON.stringify(state)); } catch (e) {} }
-
         function loadState() { try { var saved = localStorage.getItem('soul_study_state'); if (saved) { var parsed = JSON.parse(saved); if (parsed.currentDay !== undefined) state.currentDay = parsed.currentDay; if (parsed.steps) state.steps = parsed.steps; if (parsed.completedDays) state.completedDays = parsed.completedDays; } } catch (e) {} }
 
-        function burstStars() { var emojis = ['⭐', '✨', '🌟', '💫', '🌿', '🕊️']; for (var i = 0; i < 6; i++) { (function(i) { setTimeout(function() { var el = document.createElement('div'); el.className = 'star-burst'; el.textContent = emojis[Math.floor(Math.random() * emojis.length)]; el.style.left = (10 + Math.random() * 80) + '%'; el.style.top = (20 + Math.random() * 50) + '%'; el.style.fontSize = (20 + Math.random() * 25) + 'px'; document.body.appendChild(el); setTimeout(function() { el.remove(); }, 1500); }, i * 100); })(i); } }
+        function burstStars() {
+            var emojis = ['⭐', '✨', '🌟', '💫', '🌿', '🕊️'];
+            for (var i = 0; i < 6; i++) {
+                (function(i) {
+                    setTimeout(function() {
+                        var el = document.createElement('div');
+                        el.className = 'star-burst';
+                        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                        el.style.left = (10 + Math.random() * 80) + '%';
+                        el.style.top = (20 + Math.random() * 50) + '%';
+                        el.style.fontSize = (20 + Math.random() * 25) + 'px';
+                        document.body.appendChild(el);
+                        setTimeout(function() { el.remove(); }, 1500);
+                    }, i * 100);
+                })(i);
+            }
+        }
 
-        function showCelebration(stepNum) { var verse = getRandomVerse(); var messages = { 1: { emoji: '📖', title: '领受话语，如鹿渴慕溪水！' }, 2: { emoji: '🎯', title: '你抓住了真理的亮光！' }, 3: { emoji: '🔗', title: '主的话语正在你生命中生根！' }, 4: { emoji: '🕊️', title: '行出真理，磐石之上！' } }; var msg = messages[stepNum] || messages[1]; $('modalEmoji').textContent = msg.emoji; $('modalTitle').textContent = msg.title; $('modalVerse').textContent = '“' + verse.text + '”'; $('modalRef').textContent = '— ' + verse.ref; $('celebrationModal').classList.add('show'); burstStars(); try { var ctx = new(window.AudioContext || window.webkitAudioContext)(); var osc = ctx.createOscillator(); var gain = ctx.createGain(); osc.connect(gain); gain.connect(ctx.destination); osc.frequency.value = 880; osc.type = 'sine'; gain.gain.value = 0.15; osc.start(); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6); osc.stop(ctx.currentTime + 0.6); } catch (e) {} }
+        function showCelebration(stepNum) {
+            var verse = getRandomVerse();
+            var messages = {
+                1: { emoji: '📖', title: '领受话语，如鹿渴慕溪水！' },
+                2: { emoji: '🎯', title: '你抓住了真理的亮光！' },
+                3: { emoji: '🔗', title: '主的话语正在你生命中生根！' },
+                4: { emoji: '🕊️', title: '行出真理，磐石之上！' }
+            };
+            var msg = messages[stepNum] || messages[1];
+            $('modalEmoji').textContent = msg.emoji;
+            $('modalTitle').textContent = msg.title;
+            $('modalVerse').textContent = '“' + verse.text + '”';
+            $('modalRef').textContent = '— ' + verse.ref;
+            $('celebrationModal').classList.add('show');
+            burstStars();
+            try {
+                var ctx = new(window.AudioContext || window.webkitAudioContext)();
+                var osc = ctx.createOscillator();
+                var gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.frequency.value = 880;
+                osc.type = 'sine';
+                gain.gain.value = 0.15;
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+                osc.stop(ctx.currentTime + 0.6);
+            } catch (e) {}
+        }
 
-        function renderCalendar() { var grid = $('calendarGrid'); grid.innerHTML = ''; for (var i = 0; i < courseData.length; i++) { var dot = document.createElement('div'); dot.className = 'day-dot'; var isSabbath = courseData[i] && courseData[i].isSabbath === true; if (isSabbath) dot.classList.add('sabbath'); dot.textContent = isSabbath ? '🕊️' : (i + 1); if (state.completedDays.indexOf(i) !== -1) { dot.classList.add('completed'); } else if (i === state.currentDay) { dot.classList.add('active'); } else if (i > state.currentDay) { dot.classList.add('future'); } grid.appendChild(dot); } }
+        function renderCalendar() {
+            var grid = $('calendarGrid');
+            grid.innerHTML = '';
+            for (var i = 0; i < courseData.length; i++) {
+                var dot = document.createElement('div');
+                dot.className = 'day-dot';
+                var isSabbath = courseData[i] && courseData[i].isSabbath === true;
+                if (isSabbath) dot.classList.add('sabbath');
+                dot.textContent = isSabbath ? '🕊️' : (i + 1);
+                if (state.completedDays.indexOf(i) !== -1) {
+                    dot.classList.add('completed');
+                } else if (i === state.currentDay) {
+                    dot.classList.add('active');
+                } else if (i > state.currentDay) {
+                    dot.classList.add('future');
+                }
+                grid.appendChild(dot);
+            }
+        }
 
-        var timerInterval = null;
-        var timerSeconds = 0;
+        function updateStepsUI() {
+            var s = state.steps;
+            var isSabbath = isSabbathDay(state.currentDay);
+            if (isSabbath) {
+                $('mainCard').classList.add('sabbath-mode');
+                $('step1').classList.add('unlocked');
+                $('step2').classList.remove('unlocked');
+                $('step3').classList.remove('unlocked');
+                $('step4').classList.remove('unlocked');
+                $('inputStep2').disabled = true;
+                $('inputStep3').disabled = true;
+                $('inputStep4').disabled = true;
+                $('btnStep1').disabled = true;
+                $('btnStep2').disabled = true;
+                $('btnStep3').disabled = true;
+                $('btnStep4').disabled = true;
+                $('btnCompleteDay').disabled = true;
+                $('btnCompleteDay').textContent = '🕊️ 今天是安息日';
+                $('timerHint').textContent = '🕊️ 安息日 · 享受神的同在';
+                $('timerHint').style.color = '#B8A188';
+                var pct2 = 100;
+                var circ = 138.23;
+                var off2 = circ - (pct2 / 100) * circ;
+                $('ringProgress').style.strokeDashoffset = off2;
+                $('ringLabel').textContent = '🕊️';
+                $('progressText').textContent = '今日安息 · 默想';
+                $('daySubStatus').textContent = '🕊️ 安息日';
+                return;
+            } else {
+                $('mainCard').classList.remove('sabbath-mode');
+            }
+            $('step1').classList.add('unlocked');
+            if (s[1].completed) { $('step1').classList.add('completed'); } else { $('step1').classList.remove('completed'); }
+            if (s[1].completed) { $('step2').classList.add('unlocked'); $('inputStep2').disabled = false; } else { $('step2').classList.remove('unlocked'); $('inputStep2').disabled = true; }
+            if (s[2].completed) { $('step2').classList.add('completed'); $('inputStep2').disabled = true; } else { $('step2').classList.remove('completed'); }
+            if (s[2].completed) { $('step3').classList.add('unlocked'); $('inputStep3').disabled = false; } else { $('step3').classList.remove('unlocked'); $('inputStep3').disabled = true; }
+            if (s[3].completed) { $('step3').classList.add('completed'); $('inputStep3').disabled = true; } else { $('step3').classList.remove('completed'); }
+            if (s[3].completed) { $('step4').classList.add('unlocked'); $('inputStep4').disabled = false; } else { $('step4').classList.remove('unlocked'); $('inputStep4').disabled = true; }
+            if (s[4].completed) { $('step4').classList.add('completed'); $('inputStep4').disabled = true; } else { $('step4').classList.remove('completed'); }
+            $('btnStep1').textContent = s[1].completed ? '✅ 已完成静读' : '⏳ 我已读完 (需停留 30 秒)';
+            $('btnStep2').textContent = s[2].completed ? '✅ 已捕获' : '✅ 确认捕获';
+            $('btnStep3').textContent = s[3].completed ? '✅ 已联结' : '✅ 确认联结';
+            $('btnStep4').textContent = s[4].completed ? '✅ 已应用' : '✅ 确认应用';
+            $('btnStep1').disabled = s[1].completed || !s[1].timerDone;
+            $('btnStep2').disabled = s[2].completed || $('inputStep2').value.length < 10;
+            $('btnStep3').disabled = s[3].completed || $('inputStep3').value.length < 10;
+            $('btnStep4').disabled = s[4].completed || $('inputStep4').value.length < 10;
+            if (!s[1].completed && s[1].timerDone) {
+                $('timerHint').textContent = '✅ 已满 30 秒，可以点击完成静读！';
+                $('timerHint').style.color = '#2A4B41';
+            } else if (!s[1].completed) {
+                $('timerHint').textContent = '⏱️ 请阅读至少 30 秒 (已读 ' + timerSeconds + 's)';
+                $('timerHint').style.color = '#8AA39A';
+            } else {
+                $('timerHint').textContent = '📖 静读已完成';
+                $('timerHint').style.color = '#6B8A7A';
+            }
+            $('count2').textContent = $('inputStep2').value.length;
+            $('count3').textContent = $('inputStep3').value.length;
+            $('count4').textContent = $('inputStep4').value.length;
+            var pct = getProgressPercent();
+            var circumference = 138.23;
+            var offset = circumference - (pct / 100) * circumference;
+            $('ringProgress').style.strokeDashoffset = offset;
+            $('ringLabel').textContent = pct + '%';
+            $('progressText').textContent = '今日 ' + getStepCount() + ' / 4 步';
+            var allDone = s[1].completed && s[2].completed && s[3].completed && s[4].completed;
+            if (allDone) {
+                $('btnCompleteDay').disabled = false;
+                $('btnCompleteDay').textContent = '🎉 完成今日学习！';
+            } else {
+                $('btnCompleteDay').disabled = true;
+                $('btnCompleteDay').textContent = '🔒 完成全部 4 步 (' + getStepCount() + '/4)';
+            }
+            if (allDone) { $('daySubStatus').textContent = '✅ 已完成'; } else if (getStepCount() > 0) { $('daySubStatus').textContent = '🌱 进行中 (' + getStepCount() + '/4)'; } else { $('daySubStatus').textContent = '🌱 未开始'; }
+        }
 
-        function updateStepsUI() { var s = state.steps; var isSabbath = isSabbathDay(state.currentDay); if (isSabbath) { $('mainCard').classList.add('sabbath-mode'); $('step1').classList.add('unlocked'); $('step2').classList.remove('unlocked'); $('step3').classList.remove('unlocked'); $('step4').classList.remove('unlocked'); $('inputStep2').disabled = true; $('inputStep3').disabled = true; $('inputStep4').disabled = true; $('btnStep1').disabled = true; $('btnStep2').disabled = true; $('btnStep3').disabled = true; $('btnStep4').disabled = true; $('btnCompleteDay').disabled = true; $('btnCompleteDay').textContent = '🕊️ 今天是安息日'; $('timerHint').textContent = '🕊️ 安息日 · 享受神的同在'; $('timerHint').style.color = '#B8A188'; var pct2 = 100; var circ = 138.23; var off2 = circ - (pct2 / 100) * circ; $('ringProgress').style.strokeDashoffset = off2; $('ringLabel').textContent = '🕊️'; $('progressText').textContent = '今日安息 · 默想'; $('daySubStatus').textContent = '🕊️ 安息日'; return; } else { $('mainCard').classList.remove('sabbath-mode'); } $('step1').classList.add('unlocked'); if (s[1].completed) { $('step1').classList.add('completed'); } else { $('step1').classList.remove('completed'); } if (s[1].completed) { $('step2').classList.add('unlocked'); $('inputStep2').disabled = false; } else { $('step2').classList.remove('unlocked'); $('inputStep2').disabled = true; } if (s[2].completed) { $('step2').classList.add('completed'); $('inputStep2').disabled = true; } else { $('step2').classList.remove('completed'); } if (s[2].completed) { $('step3').classList.add('unlocked'); $('inputStep3').disabled = false; } else { $('step3').classList.remove('unlocked'); $('inputStep3').disabled = true; } if (s[3].completed) { $('step3').classList.add('completed'); $('inputStep3').disabled = true; } else { $('step3').classList.remove('completed'); } if (s[3].completed) { $('step4').classList.add('unlocked'); $('inputStep4').disabled = false; } else { $('step4').classList.remove('unlocked'); $('inputStep4').disabled = true; } if (s[4].completed) { $('step4').classList.add('completed'); $('inputStep4').disabled = true; } else { $('step4').classList.remove('completed'); } $('btnStep1').textContent = s[1].completed ? '✅ 已完成静读' : '⏳ 我已读完 (需停留 30 秒)'; $('btnStep2').textContent = s[2].completed ? '✅ 已捕获' : '✅ 确认捕获'; $('btnStep3').textContent = s[3].completed ? '✅ 已联结' : '✅ 确认联结'; $('btnStep4').textContent = s[4].completed ? '✅ 已应用' : '✅ 确认应用'; $('btnStep1').disabled = s[1].completed || !s[1].timerDone; $('btnStep2').disabled = s[2].completed || $('inputStep2').value.length < 10; $('btnStep3').disabled = s[3].completed || $('inputStep3').value.length < 10; $('btnStep4').disabled = s[4].completed || $('inputStep4').value.length < 10; if (!s[1].completed && s[1].timerDone) { $('timerHint').textContent = '✅ 已满 30 秒，可以点击完成静读！'; $('timerHint').style.color = '#2A4B41'; } else if (!s[1].completed) { $('timerHint').textContent = '⏱️ 请阅读至少 30 秒 (已读 ' + timerSeconds + 's)'; $('timerHint').style.color = '#8AA39A'; } else { $('timerHint').textContent = '📖 静读已完成'; $('timerHint').style.color = '#6B8A7A'; } $('count2').textContent = $('inputStep2').value.length; $('count3').textContent = $('inputStep3').value.length; $('count4').textContent = $('inputStep4').value.length; var pct = getProgressPercent(); var circumference = 138.23; var offset = circumference - (pct / 100) * circumference; $('ringProgress').style.strokeDashoffset = offset; $('ringLabel').textContent = pct + '%'; $('progressText').textContent = '今日 ' + getStepCount() + ' / 4 步'; var allDone = s[1].completed && s[2].completed && s[3].completed && s[4].completed; if (allDone) { $('btnCompleteDay').disabled = false; $('btnCompleteDay').textContent = '🎉 完成今日学习！'; } else { $('btnCompleteDay').disabled = true; $('btnCompleteDay').textContent = '🔒 完成全部 4 步 (' + getStepCount() + '/4)'; } if (allDone) { $('daySubStatus').textContent = '✅ 已完成'; } else if (getStepCount() > 0) { $('daySubStatus').textContent = '🌱 进行中 (' + getStepCount() + '/4)'; } else { $('daySubStatus').textContent = '🌱 未开始'; } }
+        function loadDay(index) {
+            var data = courseData[index];
+            if (!data) return;
+            var totalDays = courseData.length;
+            $('dayBadge').textContent = '第 ' + (index + 1) + ' / ' + totalDays + ' 天';
+            $('dayTitle').textContent = data.title;
+            $('daySubDate').textContent = '📅 第 ' + (index + 1) + ' 课';
+            $('readingContent').innerHTML = data.reading;
+            $('hookQuestionText').innerHTML = '🕊️ ' + data.hook;
+            if (!state.steps[1].completed && !isSabbathDay(index)) {
+                timerSeconds = 0;
+                state.steps[1].timerDone = false;
+                if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+            }
+            $('inputStep2').value = state.steps[2].text || '';
+            $('inputStep3').value = state.steps[3].text || '';
+            $('inputStep4').value = state.steps[4].text || '';
+            if (!state.steps[1].completed && !state.steps[1].timerDone && !isSabbathDay(index)) {
+                if (timerInterval) clearInterval(timerInterval);
+                timerInterval = setInterval(function() {
+                    timerSeconds++;
+                    if (timerSeconds >= 30) {
+                        state.steps[1].timerDone = true;
+                        updateStepsUI();
+                        if (timerInterval) clearInterval(timerInterval);
+                        timerInterval = null;
+                    }
+                    updateStepsUI();
+                }, 1000);
+            }
+            renderCalendar();
+            updateStepsUI();
+            saveState();
+        }
 
-        function loadDay(index) { var data = courseData[index]; if (!data) return; var totalDays = courseData.length; $('dayBadge').textContent = '第 ' + (index + 1) + ' / ' + totalDays + ' 天'; $('dayTitle').textContent = data.title; $('daySubDate').textContent = '📅 第 ' + (index + 1) + ' 课'; $('readingContent').innerHTML = data.reading; $('hookQuestionText').innerHTML = '🕊️ ' + data.hook; if (!state.steps[1].completed && !isSabbathDay(index)) { timerSeconds = 0; state.steps[1].timerDone = false; if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } } $('inputStep2').value = state.steps[2].text || ''; $('inputStep3').value = state.steps[3].text || ''; $('inputStep4').value = state.steps[4].text || ''; if (!state.steps[1].completed && !state.steps[1].timerDone && !isSabbathDay(index)) { if (timerInterval) clearInterval(timerInterval); timerInterval = setInterval(function() { timerSeconds++; if (timerSeconds >= 30) { state.steps[1].timerDone = true; updateStepsUI(); if (timerInterval) clearInterval(timerInterval); timerInterval = null; } updateStepsUI(); }, 1000); } renderCalendar(); updateStepsUI(); saveState(); }
+        function completeStep(stepNum) {
+            if (isSabbathDay(state.currentDay)) return;
+            if (stepNum === 1) {
+                if (!state.steps[1].timerDone) return;
+                state.steps[1].completed = true;
+                if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+                showCelebration(1);
+            } else if (stepNum === 2) {
+                var text = $('inputStep2').value.trim();
+                if (text.length < 10) return;
+                state.steps[2].text = text;
+                state.steps[2].completed = true;
+                showCelebration(2);
+            } else if (stepNum === 3) {
+                var text = $('inputStep3').value.trim();
+                if (text.length < 10) return;
+                state.steps[3].text = text;
+                state.steps[3].completed = true;
+                showCelebration(3);
+            } else if (stepNum === 4) {
+                var text = $('inputStep4').value.trim();
+                if (text.length < 10) return;
+                state.steps[4].text = text;
+                state.steps[4].completed = true;
+                showCelebration(4);
+            }
+            updateStepsUI();
+            saveState();
+            if (getStepCount() === 4) { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        }
 
-        function completeStep(stepNum) { if (isSabbathDay(state.currentDay)) return; if (stepNum === 1) { if (!state.steps[1].timerDone) return; state.steps[1].completed = true; if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } showCelebration(1); } else if (stepNum === 2) { var text = $('inputStep2').value.trim(); if (text.length < 10) return; state.steps[2].text = text; state.steps[2].completed = true; showCelebration(2); } else if (stepNum === 3) { var text = $('inputStep3').value.trim(); if (text.length < 10) return; state.steps[3].text = text; state.steps[3].completed = true; showCelebration(3); } else if (stepNum === 4) { var text = $('inputStep4').value.trim(); if (text.length < 10) return; state.steps[4].text = text; state.steps[4].completed = true; showCelebration(4); } updateStepsUI(); saveState(); if (getStepCount() === 4) { window.scrollTo({ top: 0, behavior: 'smooth' }); } }
+        function completeDay() {
+            if (isSabbathDay(state.currentDay)) return;
+            var allDone = state.steps[1].completed && state.steps[2].completed && state.steps[3].completed && state.steps[4].completed;
+            if (!allDone) return;
+            if (state.completedDays.indexOf(state.currentDay) === -1) {
+                state.completedDays.push(state.currentDay);
+            }
+            if (state.currentDay < courseData.length - 1) {
+                state.steps = { 1: { completed: false, timerDone: false }, 2: { completed: false, text: '' }, 3: { completed: false, text: '' }, 4: { completed: false, text: '' } };
+                state.currentDay++;
+                while (state.completedDays.indexOf(state.currentDay) !== -1 && state.currentDay < courseData.length - 1) {
+                    state.currentDay++;
+                }
+                loadDay(state.currentDay);
+                setTimeout(function() {
+                    var verse = getRandomVerse();
+                    $('modalEmoji').textContent = '🌅';
+                    $('modalTitle').textContent = '你忠于今日的托付！';
+                    $('modalVerse').textContent = '“' + verse.text + '”';
+                    $('modalRef').textContent = '— ' + verse.ref;
+                    $('celebrationModal').classList.add('show');
+                    burstStars();
+                }, 400);
+            } else {
+                setTimeout(function() {
+                    $('modalEmoji').textContent = '🕊️';
+                    $('modalTitle').textContent = '🏁 你完成了全部旅程！';
+                    $('modalVerse').textContent = '“那美好的仗我已经打过了，当跑的路我已经跑尽了，所信的道我已经守住了。”';
+                    $('modalRef').textContent = '— 提摩太后书 4:7';
+                    $('celebrationModal').classList.add('show');
+                    burstStars();
+                }, 400);
+                $('btnCompleteDay').disabled = true;
+                $('btnCompleteDay').textContent = '🎉 全部完成！哈利路亚！';
+            }
+            saveState();
+        }
 
-        function completeDay() { if (isSabbathDay(state.currentDay)) return; var allDone = state.steps[1].completed && state.steps[2].completed && state.steps[3].completed && state.steps[4].completed; if (!allDone) return; if (state.completedDays.indexOf(state.currentDay) === -1) { state.completedDays.push(state.currentDay); } if (state.currentDay < courseData.length - 1) { state.steps = { 1: { completed: false, timerDone: false }, 2: { completed: false, text: '' }, 3: { completed: false, text: '' }, 4: { completed: false, text: '' } }; state.currentDay++; while (state.completedDays.indexOf(state.currentDay) !== -1 && state.currentDay < courseData.length - 1) { state.currentDay++; } loadDay(state.currentDay); setTimeout(function() { var verse = getRandomVerse(); $('modalEmoji').textContent = '🌅'; $('modalTitle').textContent = '你忠于今日的托付！'; $('modalVerse').textContent = '“' + verse.text + '”'; $('modalRef').textContent = '— ' + verse.ref; $('celebrationModal').classList.add('show'); burstStars(); }, 400); } else { setTimeout(function() { $('modalEmoji').textContent = '🕊️'; $('modalTitle').textContent = '🏁 你完成了全部 24 天旅程！'; $('modalVerse').textContent = '“那美好的仗我已经打过了，当跑的路我已经跑尽了，所信的道我已经守住了。”'; $('modalRef').textContent = '— 提摩太后书 4:7'; $('celebrationModal').classList.add('show'); burstStars(); }, 400); $('btnCompleteDay').disabled = true; $('btnCompleteDay').textContent = '🎉 全部完成！哈利路亚！'; } saveState(); }
+        function initEvents() {
+            $('btnStep1').onclick = function() { completeStep(1); };
+            $('btnStep2').onclick = function() { completeStep(2); };
+            $('btnStep3').onclick = function() { completeStep(3); };
+            $('btnStep4').onclick = function() { completeStep(4); };
+            $('btnCompleteDay').onclick = completeDay;
+            $('inputStep2').oninput = function() { state.steps[2].text = $('inputStep2').value; updateStepsUI(); saveState(); };
+            $('inputStep3').oninput = function() { state.steps[3].text = $('inputStep3').value; updateStepsUI(); saveState(); };
+            $('inputStep4').oninput = function() { state.steps[4].text = $('inputStep4').value; updateStepsUI(); saveState(); };
+            $('readingContent').addEventListener('click', function(e) {
+                var target = e.target.closest('p, .highlight-block');
+                if (target && !state.steps[2].completed && state.steps[1].completed && !isSabbathDay(state.currentDay)) {
+                    var text = target.textContent.trim();
+                    if (text.length > 0) {
+                        $('inputStep2').value = text;
+                        state.steps[2].text = text;
+                        updateStepsUI();
+                        saveState();
+                        target.style.transition = '0.1s';
+                        target.style.backgroundColor = '#DCE9E3';
+                        setTimeout(function() { target.style.backgroundColor = ''; }, 300);
+                    }
+                }
+            });
+            $('modalBtn').onclick = function() { $('celebrationModal').classList.remove('show'); };
+            $('celebrationModal').onclick = function(e) { if (e.target === $('celebrationModal')) $('celebrationModal').classList.remove('show'); };
+        }
 
-        function initEvents() { $('btnStep1').onclick = function() { completeStep(1); }; $('btnStep2').onclick = function() { completeStep(2); }; $('btnStep3').onclick = function() { completeStep(3); }; $('btnStep4').onclick = function() { completeStep(4); }; $('btnCompleteDay').onclick = completeDay; $('inputStep2').oninput = function() { state.steps[2].text = $('inputStep2').value; updateStepsUI(); saveState(); }; $('inputStep3').oninput = function() { state.steps[3].text = $('inputStep3').value; updateStepsUI(); saveState(); }; $('inputStep4').oninput = function() { state.steps[4].text = $('inputStep4').value; updateStepsUI(); saveState(); }; $('readingContent').addEventListener('click', function(e) { var target = e.target.closest('p, .highlight-block'); if (target && !state.steps[2].completed && state.steps[1].completed && !isSabbathDay(state.currentDay)) { var text = target.textContent.trim(); if (text.length > 0) { $('inputStep2').value = text; state.steps[2].text = text; updateStepsUI(); saveState(); target.style.transition = '0.1s'; target.style.backgroundColor = '#DCE9E3'; setTimeout(function() { target.style.backgroundColor = ''; }, 300); } } }); $('modalBtn').onclick = function() { $('celebrationModal').classList.remove('show'); }; $('celebrationModal').onclick = function(e) { if (e.target === $('celebrationModal')) $('celebrationModal').classList.remove('show'); }; }
+        function loadDataFromJSON() {
+            fetch('data.json')
+                .then(function(response) {
+                    if (!response.ok) { throw new Error('无法加载 data.json，状态码：' + response.status); }
+                    return response.json();
+                })
+                .then(function(data) {
+                    courseData = data;
+                    dataLoaded = true;
+                    $('loadingArea').style.display = 'none';
+                    $('contentArea').style.display = 'block';
+                    loadState();
+                    while (state.completedDays.indexOf(state.currentDay) !== -1 && state.currentDay < courseData.length - 1) {
+                        state.currentDay++;
+                    }
+                    if (state.currentDay >= courseData.length) { state.currentDay = courseData.length - 1; }
+                    if (courseData.length === 0) {
+                        $('dayTitle').textContent = '📭 暂无课程数据';
+                        $('daySubDate').textContent = '请管理员在后台添加课程';
+                        return;
+                    }
+                    loadDay(state.currentDay);
+                    initEvents();
+                    console.log('🌱 数据加载成功，共 ' + courseData.length + ' 天课程');
+                })
+                .catch(function(error) {
+                    $('loadingArea').innerHTML = '<div class="error-msg">❌ ' + error.message + '<br><br>请检查：<br>1. 仓库中是否存在 data.json 文件<br>2. data.json 格式是否正确<br>3. 稍后刷新页面重试</div>';
+                    console.error('加载失败：', error);
+                });
+        }
 
-        function init() { loadState(); while (state.completedDays.indexOf(state.currentDay) !== -1 && state.currentDay < courseData.length - 1) { state.currentDay++; } if (state.currentDay >= courseData.length) { state.currentDay = courseData.length - 1; } loadDay(state.currentDay); initEvents(); }
-
-        init();
-        console.log('🌱 晨光书房已开启！愿你每日得着智慧。');
+        loadDataFromJSON();
     </script>
 </body>
 </html>
