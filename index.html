@@ -16,8 +16,6 @@
             min-height: 100vh;
         }
         .container { max-width: 460px; margin: 0 auto; }
-
-        /* 认证框 */
         .auth-box {
             background: #FCF8F0;
             border-radius: 28px;
@@ -91,8 +89,6 @@
         }
         .auth-box .auth-success.show { display: block; }
         .hidden { display: none !important; }
-
-        /* 用户栏 */
         .user-bar {
             display: flex;
             justify-content: space-between;
@@ -152,8 +148,6 @@
             background: #F8DDDD;
             color: #B33C3C;
         }
-
-        /* 头部 */
         .header {
             display: flex;
             justify-content: space-between;
@@ -180,8 +174,6 @@
             font-weight: 600;
             box-shadow: 0 2px 8px rgba(212,155,107,0.3);
         }
-
-        /* 日历 */
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -231,8 +223,6 @@
             color: #5B4B3A;
             border-color: #B8A188;
         }
-
-        /* 主卡片 */
         .main-card {
             background: #FCF8F0;
             border-radius: 28px;
@@ -614,14 +604,18 @@
     </div>
 </div>
 
+<!-- ============================================================ -->
+<!-- JavaScript -->
+<!-- ============================================================ -->
 <script>
-        var SUPABASE_URL = 'https://kxpysncdczpgqsmemess.supabase.co/rest/v1/'; 
-    var SUPABASE_ANON_KEY = 'sb_publishable_vhjwgRWoB9tz5_3A9jaZyA_AlI6liLh'; 
-   
+    // ★★★ 在这里填写你的 Supabase 配置（只改这两个值） ★★★
+    var SUPABASE_URL = 'https://你的项目ID.supabase.co';
+    var SUPABASE_ANON_KEY = 'sb_publishable_你的公钥';
+    // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+
     var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-</script>
-</body>    // ----- 认证函数 -----
+    // ----- 认证函数 -----
     async function login(email, password) {
         return await supabase.auth.signInWithPassword({ email, password });
     }
@@ -1409,5 +1403,4 @@
     console.log('🌱 晨光书房已开启（Supabase 版）！');
 </script>
 </body>
-</html>
 </html>
