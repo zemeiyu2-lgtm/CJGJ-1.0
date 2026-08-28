@@ -93,6 +93,17 @@
         .day-dot.future {
             opacity: 0.5;
         }
+        .day-dot.sabbath {
+            background: #F0E5D8;
+            color: #B8A188;
+            border-color: #DACBB8;
+            font-size: 8px;
+        }
+        .day-dot.sabbath.completed {
+            background: #DACBB8;
+            color: #5B4B3A;
+            border-color: #B8A188;
+        }
 
         /* ========== 主卡片 ========== */
         .main-card {
@@ -220,6 +231,18 @@
             margin: 12px 0;
             font-size: 0.95em;
             text-indent: 0;
+        }
+        .reading-text ul {
+            padding-left: 20px;
+            line-height: 2;
+        }
+        .reading-text ul li {
+            list-style-type: none;
+        }
+        .reading-text ul li::before {
+            content: "• ";
+            color: #D49B6B;
+            font-weight: 700;
         }
         .clickable-para {
             cursor: pointer;
@@ -427,6 +450,28 @@
         .text-center {
             text-align: center;
         }
+
+        /* Sabbath 特殊样式 */
+        .sabbath-mode .step-block {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .sabbath-mode .step-block.unlocked {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .sabbath-mode .btn-step {
+            display: none;
+        }
+        .sabbath-mode .progress-ring-wrap {
+            display: none;
+        }
+        .sabbath-mode #btnCompleteDay {
+            display: none;
+        }
+        .sabbath-mode .day-sub-status {
+            color: #B8A188;
+        }
     </style>
 </head>
 <body>
@@ -435,12 +480,12 @@
         <!-- 头部 -->
         <div class="header">
             <h1>🌱 晨光<span>· 自觉书房</span></h1>
-            <span class="badge-day" id="dayBadge">第 1 / 21 天</span>
+            <span class="badge-day" id="dayBadge">第 1 / 24 天</span>
         </div>
 
         <!-- 日历 -->
         <div class="calendar-grid" id="calendarGrid">
-            <!-- JS 渲染 21 个圆点 -->
+            <!-- JS 渲染 24 个圆点 -->
         </div>
 
         <!-- 主卡片 -->
@@ -448,7 +493,7 @@
             <div class="day-title" id="dayTitle">加载中...</div>
             <div class="day-sub">
                 <span id="daySubDate">📅 第 1 课</span>
-                <span id="daySubStatus">🌱 未开始</span>
+                <span class="day-sub-status" id="daySubStatus">🌱 未开始</span>
             </div>
 
             <!-- 步骤 1：静读 -->
@@ -541,97 +586,369 @@
 
     <script>
         // ================================================================
-        // ★★★★★  【数据填充区】 在这里放入你的 21 天课程内容 ★★★★★
+        // ★★★★★ 【数据填充区】★★★★★
         // ================================================================
+
         const courseData = [
-            // ---------- 第 1 ~ 7 天：示例内容 (心理学/灵性入门) ----------
+            // ================================================================
+            // 🌱 第一周 · 信仰的根基：试炼与成熟（周一至周六，第1-6课）
+            // ================================================================
+
             {
                 day: 1,
-                title: "认识你的内在声音",
+                title: "第1课 · 认识雅各：从怀疑到仆人的蜕变",
                 reading: `
-                    <p>每个人心中都有一个持续不断的“内在独白”。它可能是鼓励，也可能是批评。</p>
-                    <p>心理学中称之为“自动化思维”。这些想法往往在无意识中塑造我们的情绪和行为。</p>
-                    <div class="highlight-block">✨ 关键洞察：你并不等于你的想法。你是观察想法的那个人。</div>
-                    <p>今天，试着仅仅观察自己头脑中的声音，而不急于认同或反驳它。</p>
+                    <p>雅各书的作者，是主耶稣肉身的兄弟。他曾经不信耶稣（约7:5），但在主复活后向他显现，他彻底改变，成为耶路撒冷教会的领袖（加2:9，徒15:13-33）。</p>
+                    <p>雅各不自称"主的兄弟"，而自称"神和主耶稣基督的仆人"（雅1:1）。在希腊文中，"仆人"就是"奴仆"的意思——完全属于主人，没有自己的主权。</p>
+                    <div class="highlight-block">✨ 关键洞察：与他同称"仆人"的还有保罗、彼得、犹大。这不是自贬，而是灵命成熟的标记。一个不成熟的人是自我中心的，一个成熟的人是甘愿为仆的。</div>
+                    <p>传说雅各因跪着长期祷告，膝盖起了厚茧。主后62年，他从圣殿顶被扔下，又被棍打死。殉道前，他像主一样祷告："父啊，赦免他们，因为他们所作的他们不晓得。"</p>
                 `,
-                hook: "在今天的生活中，你最常听到的内在声音是鼓励还是批评？明天你打算如何回应它？"
-            }, {
+                hook: "雅各从"不信的兄弟"变成"甘心为仆的人"。在你的信仰历程中，有没有一个"转折点"让你对主的认识发生了根本改变？请描述那个时刻（或你期待的那个时刻）。"
+            },
+            {
                 day: 2,
-                title: "感恩的视角",
+                title: "第2课 · 试炼中的大喜乐",
                 reading: `
-                    <p>感恩不是对困境的否认，而是对恩典的察觉。</p>
-                    <p>积极心理学研究发现，每日写下三件感恩之事，能显著提升幸福感和心理韧性。</p>
-                    <div class="highlight-block">✨ 关键洞察：感恩是把目光从“我没有的”转向“我已拥有的”。</div>
-                    <p>就像在黑暗中点亮一盏灯，它不能消除黑暗，却能改变你看待黑暗的方式。</p>
+                    <p>雅各没有说"如果你们遇见试炼"，而是说"你们落在百般试炼中"——因为基督徒必定会遇到试炼。耶稣说："在世上你们有苦难"（约16:33）。保罗也说："我们进入神的国，必须经历许多艰难"（徒14:22）。</p>
+                    <p>试炼是"百般的"——各种各样的：疾病、意外、失望、逼迫。有些是因为我们是人而有的，有些是因为我们是基督徒而有的。</p>
+                    <p>但雅各的命令是："<strong>都要以为大喜乐</strong>"。这不是说试炼本身是快乐的，而是说我们可以在试炼中喜乐，因为我们知道——信心经过试炼，就生忍耐；忍耐当成功，就使我们"成全完备，毫无缺欠"。</p>
+                    <div class="highlight-block">✨ 关键洞察："忍耐"在希腊原文中的意思是"在重压之下坚定不移"。不是被动忍受，而是主动坚持。就像运动员在阻力训练中变强，我们的信心在试炼中被炼净。</div>
                 `,
-                hook: "如果今天要挑选一件最微小却真实值得感恩的事，那会是什么？这个察觉如何改变你的心境？"
-            }, {
+                hook: "你正在经历或最近经历过什么"试炼"？如果雅各说"要以为大喜乐"，你觉得自己最难认同的是什么？请诚实地写下你的挣扎。"
+            },
+            {
                 day: 3,
-                title: "情绪是信使",
+                title: "第3课 · 求智慧的祷告",
                 reading: `
-                    <p>愤怒、悲伤、焦虑——这些情绪常常被我们视为“敌人”或“软弱”。</p>
-                    <p>但情绪其实是内在世界的信使。愤怒提醒我们边界被侵犯；悲伤帮助我们与失去和解；焦虑则在为未来做准备。</p>
-                    <div class="highlight-block">✨ 关键洞察：压抑情绪会让它更激烈地反扑；聆听它，反而能获得引导。</div>
-                    <p>就像对待一位急躁的客人，先请他坐下，听听他要说什么。</p>
+                    <p>"你们中间若有缺少智慧的，应当求那厚赐与众人、也不斥责人的神，主就必赐给他。"（雅1:5）</p>
+                    <p>这里有一个重要的区别：<strong>"知识"</strong>是资料的积累，<strong>"智慧"</strong>是知道如何正确运用知识。许多人读了圣经，却不知道如何应用——这就是缺少智慧。</p>
+                    <p>所罗门求智慧，神喜悦他（王上3:7-12）。神应许"厚赐"——慷慨地给；"不斥责"——不会因为你求而责备你。</p>
+                    <div class="highlight-block">✨ 关键洞察：但有一个条件——凭着信心求，一点不疑惑。疑惑的人就像海中的波浪，被风吹动翻腾。这样的人不要想从主那里得什么。</div>
                 `,
-                hook: "最近一次让你感到强烈情绪的事件是什么？如果情绪是信使，它想告诉你什么信息？"
-            }, {
+                hook: "你最近是否在某个具体处境中"不知道该怎么办"？如果今天你向神求智慧，你最需要祂指引的是哪一件事？请写出来。"
+            },
+            {
                 day: 4,
-                title: "心意更新而变化",
+                title: "第4课 · 贫穷与富足的试炼",
                 reading: `
-                    <p>保罗在罗马书中劝勉：“不要效法这个世界，只要心意更新而变化。”</p>
-                    <p>“更新”不是一次性的奇迹，而是一个每日的、主动的选择。神经科学证明，大脑具有“神经可塑性”——我们反复使用的思维路径会变强，反之则会变弱。</p>
-                    <div class="highlight-block">✨ 关键洞察：你所专注的，最终会塑造你。每天用真理喂养你的心，就像给植物浇水。</div>
-                    <p>你今天选择将注意力放在哪里，那里就会生长。</p>
+                    <p>雅各提到两种极端处境："贫穷"和"富足"——两者都是试炼。</p>
+                    <p><strong>贫穷</strong>的试炼是：可能使人咒骂神。约伯失去一切时，妻子说："你弃掉神，死吧！"（伯2:9）但雅各说：贫穷的弟兄该喜乐，因为神拣选了世上的贫穷人，叫他们在信心上富足（雅2:5）。福音首先临到穷人（路4:18），在基督里，贫穷的奴仆成了"自由人"（林前7:21-22）。</p>
+                    <p><strong>富足</strong>的试炼是：可能使人忘记神（申8:10-14）。雅各说：富足的人该喜乐，因为他被降卑了——财富不能买灵魂的赎价（诗49:6-9）。富足如草上的花，太阳出来一晒就枯干。</p>
+                    <div class="highlight-block">✨ 关键洞察：重要的不是"你有多少"，而是"你在信心上有多富足"。</div>
                 `,
-                hook: "如果“心意更新”就像给花园浇水，你今天决定在哪一块“心田”上用心浇灌？"
-            }, {
+                hook: "你目前更靠近"贫穷"还是"富足"的处境？在这个处境中，你最容易犯的属灵危险是什么？今天你可以如何调整眼光？"
+            },
+            {
                 day: 5,
-                title: "与焦虑做朋友",
+                title: "第5课 · 面对试探：罪的形成",
                 reading: `
-                    <p>焦虑是对未来的过度想象。它试图让我们为所有可能性做好准备，但却常常让我们动弹不得。</p>
-                    <p>研究表明，90%的焦虑内容从未真正发生。焦虑的本质，是“试图掌控不可掌控之事”。</p>
-                    <div class="highlight-block">✨ 关键洞察：对抗焦虑的最佳方式，不是消灭它，而是将它的能量转化为当下的行动。</div>
-                    <p>当你感到焦虑时，问自己：“此刻，我能做的一件小事是什么？”</p>
+                    <p>"<strong>忍受试探的人是有福的</strong>，因为他经过试验以后，必得生命的冠冕。"（雅1:12）</p>
+                    <p>但要注意："人被试探，不可说'我是被神试探'"——神不试探人。试探的来源是：<strong>私欲 + 机会 = 试探；私欲 + 机会 + 行动 = 罪；罪 + 不悔改 = 死亡</strong>。</p>
+                    <p>受试探本身不是罪——耶稣也受过试探，却没有犯罪（来4:15）。试探变成罪，是在我们"妥协、行动"的那一刻。</p>
+                    <div class="highlight-block">✨ 关键洞察：胜过罪有四个步骤——①改变私欲（用神的话更新心思）；②限制机会（避开引诱的环境）；③操练节制（靠着圣灵）；④恳求赦免（若犯罪，认罪悔改）。</div>
                 `,
-                hook: "你此刻是否正为某件事焦虑？把它写出来，然后问：今天我能采取的一小步行动是什么？"
-            }, {
+                hook: "你最容易"妥协"的试探是什么？在"私欲、机会、行动、不悔改"这四个环节中，你最需要在哪一个环节"截断"罪的链条？今天你可以怎么做？"
+            },
+            {
                 day: 6,
-                title: "静默的力量",
+                title: "第6课 · 快听、慢说、慢动怒",
                 reading: `
-                    <p>在这个充满噪音和碎片信息的时代，静默成为了一种稀缺的属灵操练。</p>
-                    <p>诗篇中说：“你们要休息，要知道我是神。”静默不是空白，而是一种深刻的聆听，是对神圣秩序的信任。</p>
-                    <div class="highlight-block">✨ 关键洞察：在静默中，我们放下掌控的焦虑，让灵魂的杂草得以被看清和拔除。</div>
-                    <p>每天给自己5分钟的刻意静默，仅仅专注于呼吸，让思绪像云一样飘过而不抓住它。</p>
+                    <p>"你们各人要快快地听，慢慢地说，慢慢地动怒。因为人的怒气并不成就神的义。"（雅1:19-20）</p>
+                    <p><strong>"快快地听"</strong>——不是指"速度"，而是"态度"：迫切地、主动地聆听神的话语和别人的需要。</p>
+                    <p><strong>"慢慢地说"</strong>——谨慎言语，不急于表达。箴言说："多言多语难免有过；禁止嘴唇是有智慧。"（箴10:19）</p>
+                    <p><strong>"慢慢地动怒"</strong>——"怒气"和"忿怒"在圣经中常被当作小罪，但雅各说它不能成就神的义。</p>
+                    <div class="highlight-block">✨ 关键洞察：保罗说："生气却不要犯罪，不可含怒到日落。"（弗4:26）如果怒从心起，要控制它不变成恶行，并在日落前消除——否则就给魔鬼留地步。</div>
                 `,
-                hook: "如果今天你能争取5分钟的绝对静默，你会选择在什么时间、什么地点？你期待听到什么？"
-            }, {
-                day: 7,
-                title: "先完成，再完美",
-                reading: `
-                    <p>拖延的最大敌人不是懒惰，而是对“完美”的执念。我们因为害怕做得不够好，而迟迟不肯开始。</p>
-                    <p>但任何伟大的作品，都始于一个粗糙的雏形。就像种子埋入土中，最初只是一团不起眼的混沌。</p>
-                    <div class="highlight-block">✨ 关键洞察：“先完成，再完美”是对抗拖延的黄金法则。启动行动本身，就会改变你的心理状态。</div>
-                    <p>今天，选择一件你一直在犹豫的事，允许自己做得“不完美”。</p>
-                `,
-                hook: "有一件你一直拖延的事吗？如果今天只做它的“最粗糙版本”，你会从哪里开始？"
+                hook: "回想最近一次你"动怒"的经历。你的怒气是因为"神的荣耀"还是"自己的面子"？如果你能重新经历那一刻，你会如何"慢慢地动怒"？"
             },
 
-            // ---------- 第 8 ~ 21 天：模板占位 (请替换为你自己的内容) ----------
-            ...Array.from({ length: 14 }, (_, i) => {
-                const dayNum = i + 8;
-                return {
-                    day: dayNum,
-                    title: `第 ${dayNum} 天 · 你的课程主题`,
-                    reading: `
-                        <p>在这里写下你第 ${dayNum} 天的正文内容。支持 <strong>HTML</strong> 标签。</p>
-                        <p>你可以放故事、经文、案例或论述。建议控制手机 3-5 屏内。</p>
-                        <div class="highlight-block">✨ 核心要点：用这个区块强调今日最重要的洞察。</div>
-                        <p>记得保持段落简洁，每段不超过 4 行，方便手机阅读。</p>
-                    `,
-                    hook: "这是今日的“钩子问题”，引导读者将知识转化为行动。请替换成你独特的问题。"
-                };
-            })
+            // ================================================================
+            // 🕊️ 第一周 · 安息日（第7天 · 周日休息）
+            // ================================================================
+            {
+                day: 7,
+                title: "🕊️ 安息日 · 默想与回顾",
+                reading: `
+                    <p style="text-align:center; font-size:1.2em;"><strong>"你们要休息，要知道我是神。"</strong><br>—— 诗篇 46:10</p>
+                    <p>今天是安息日，不学习新内容。</p>
+                    <p>请回顾本周学习的六课：</p>
+                    <ul style="padding-left:20px; line-height:2;">
+                        <li>📖 第1课 · 认识雅各：从怀疑到仆人的蜕变</li>
+                        <li>📖 第2课 · 试炼中的大喜乐</li>
+                        <li>📖 第3课 · 求智慧的祷告</li>
+                        <li>📖 第4课 · 贫穷与富足的试炼</li>
+                        <li>📖 第5课 · 面对试探：罪的形成</li>
+                        <li>📖 第6课 · 快听、慢说、慢动怒</li>
+                    </ul>
+                    <div class="highlight-block">🌱 默想指引：找出本周最触动你的一句话或一个词。为什么它触动你？神是否在藉着它对你说话？</div>
+                    <p>今天，花时间安静在神面前。不做笔记，不赶进度，单单在祂的同在中安息。</p>
+                `,
+                hook: "请花10-15分钟安静在神面前，然后写下：本周神对你说的最重要的一句话是什么？你的生命因此有了什么改变或立志？",
+                isSabbath: true
+            },
+
+            // ================================================================
+            // 🌿 第二周 · 信仰的实践：信心与行为（周一至周六，第8-13课）
+            // ================================================================
+
+            {
+                day: 8,
+                title: "第7课 · 行道与清洁的虔诚",
+                reading: `
+                    <p>"你们要脱去一切的污秽和盈余的邪恶，存温柔的心领受那所栽种的道，就是能救你们灵魂的道。<strong>只是你们要行道，不要单单听道，自己欺哄自己</strong>。"（雅1:21-22）</p>
+                    <p>雅各用了一个比喻：听道不行道的人，就像人照镜子，看见自己的本相，走后随即忘了。而"详细察看那全备、使人自由之律法"并且实在行出来的人，"就在他所行的事上必然得福"。</p>
+                    <p>神的话有三种能力：<strong>新造</strong>（使我们重生）、<strong>洁净</strong>（使我们成圣）、<strong>保守</strong>（使我们不犯罪）。</p>
+                    <div class="highlight-block">✨ 关键洞察："在神我们的父面前，那清洁没有玷污的虔诚，就是看顾在患难中的孤儿寡妇，并且保守自己不沾染世俗。"（雅1:27）虔诚不是"做礼拜"就完了——它是可实行的、有实用价值的、个人的、纯洁的。</div>
+                `,
+                hook: "雅各说"虔诚"包含"看顾孤儿寡妇"和"保守自己不沾染世俗"。在这两件事上，你觉得自己在哪方面更需要被提醒？今天你可以做出一个什么"微小行动"来回应？"
+            },
+            {
+                day: 9,
+                title: "第8课 · 不可偏待人",
+                reading: `
+                    <p>雅各严厉警告："<strong>不可按着外貌待人</strong>。"（雅2:1）</p>
+                    <p>在一世纪，社会阶级分明：富人vs穷人、自由人vs奴隶、犹太人vs外邦人。但在基督里，这一切都平等了（加3:28，西3:11）。</p>
+                    <p>雅各描述了一个场景：一个穿华美衣服的富人和一个穿肮脏衣服的穷人同时进入会堂，你怎样待他们？如果重富轻贫，就是"用恶意断定人"。</p>
+                    <div class="highlight-block">✨ 关键洞察：为什么不可偏待人？——①这是对荣耀的主的羞辱；②这是藐视神所拣选的人；③我们看重的是那些欺压我们的人；④我们犯了"至尊的律法"——"爱人如己"（雅2:8）。雅各甚至说："只在一条上跌倒，就是犯了众条。"</div>
+                `,
+                hook: "在你的生活中（教会、职场、社交圈），你最容易"按外貌待人"的对象是谁？是什么原因让你对他们有不同的态度？今天你可以如何操练"不偏待人"？"
+            },
+            {
+                day: 10,
+                title: "第9课 · 信心若没有行为是死的",
+                reading: `
+                    <p>这是雅各书最著名的段落之一："<strong>信心若没有行为就是死的</strong>。"（雅2:17）</p>
+                    <p>雅各列举了三种信心：</p>
+                    <p><strong>①死的信心</strong>——只有理性的认同，头脑知道教义，但生活毫无改变。口里说"平平安安地去吧"，却不愿给饥饿的人食物。这种信心是假的，是"自己欺哄自己"。</p>
+                    <p><strong>②鬼魔的信心</strong>——鬼魔也信神只有一位，也信基督的神圣（可3:11-12），也信将来的审判（太8:28-29）——他们信，却是"战兢"。这种信心有理性和感情，但没有顺服的意志，仍然不能得救。</p>
+                    <p><strong>③有生命的信心</strong>——这才是得救的信心：<strong>理智明白真理 + 心灵渴望真理 + 意志实行真理</strong>。信心与行为并行，信心因着行为才得成全（雅2:22）。</p>
+                    <div class="highlight-block">✨ 关键洞察：雅各用两个例子——亚伯拉罕献以撒和喇合接待探子。一个是犹太人之父，一个是外邦妓女。他们的共同点是：信心都有行为的印证。</div>
+                `,
+                hook: "如果你用"理智 + 情感 + 意志"三个维度来衡量自己的信心，你在哪个维度最薄弱？今天你可以做出一个什么"行为"来表明你的信心是活的？"
+            },
+            {
+                day: 11,
+                title: "第10课 · 制伏舌头",
+                reading: `
+                    <p>"原来我们在许多事上都有过失；若有人在话语上没有过失，他就是完全人，也能勒住自己的全身。"（雅3:2）</p>
+                    <p>舌头是"最小的"肢体，却能说"最大的话"。雅各用了三个比喻：</p>
+                    <p><strong>①嚼环</strong>——放在马嘴里，就能调动马的全身。</p>
+                    <p><strong>②船舵</strong>——小小的舵，却能转动大船。</p>
+                    <p><strong>③火</strong>——舌头就是火，能点燃最大的树林，"最小的火能点着最大的树林"。</p>
+                    <div class="highlight-block">✨ 关键洞察：舌头是"不止息的恶物，满了害死人的毒气"。我们用它"颂赞那为主、为父的神，又用它咒诅那照着神形像被造的人"——这是不应当的！一个泉源不能发出甜苦两样的水。</div>
+                `,
+                hook: "你的舌头最容易在哪类事上"点火"？（批评论断、说闲话、急躁的言语、谎言、抱怨……）今天你可以如何"勒住自己的舌头"？请写一个具体的操练计划。"
+            },
+            {
+                day: 12,
+                title: "第11课 · 两种智慧",
+                reading: `
+                    <p>"你们中间谁是有智慧、有见识的呢？他就当在智慧的温柔上显出他的善行来。"（雅3:13）</p>
+                    <p>雅各对比了两种智慧：</p>
+                    <p><strong>属地的智慧</strong>——不是从上头来的，而是"属地的、属情欲的、属鬼魔的"。它的特征是"苦毒的嫉妒和纷争"，带来"扰乱和各样的坏事"。这种智慧喜欢权力、地位、特权，它激动人争竞、比较、自夸。</p>
+                    <p><strong>属天的智慧</strong>——从上头来的，其特征是：<strong>先是清洁，和平，温良，柔顺，满有怜悯，多结善果，没有偏见，没有假冒</strong>。</p>
+                    <div class="highlight-block">✨ 关键洞察：两种智慧的果子截然不同——属地的结出"纷争和坏事"，属天的结出"和平和义果"。这八种特质，正是基督生命的彰显。</div>
+                `,
+                hook: "对照"属天智慧的八种特质"，你觉得自己在哪一两种特质上最需要被圣灵更新？今天你可以怎样"在智慧的温柔上显出善行"？"
+            },
+            {
+                day: 13,
+                title: "第12课 · 争战的根源：与神为敌",
+                reading: `
+                    <p>"你们中间的争战、斗殴，是从哪里来的呢？不是从你们百体中战斗之私欲来的吗？"（雅4:1）</p>
+                    <p>雅各指出<strong>三种争战</strong>，层层深入：</p>
+                    <p><strong>①人与人争</strong>（4:1-2上）——弟兄之间本应相爱，却彼此争竞、斗殴。</p>
+                    <p><strong>②内心之争</strong>（4:1-3）——外面争战的根源，是里面的私欲——贪恋、嫉妒、野心。这种"自私自利"导致：求却得不着（因为妄求）、杀人的意念（恨弟兄就是杀人的，约一3:15）。</p>
+                    <p><strong>③人与神争</strong>（4:4-6）——这是最根本的争战！人之所以与人相争、内心痛苦，是因为<strong>先与神为敌</strong>。"与世俗为友的，就是与神为敌了。"（雅4:4）</p>
+                    <div class="highlight-block">✨ 关键洞察："神阻挡骄傲的人，赐恩给谦卑的人。"（雅4:6）谦卑，是终止争战的起点。骄傲是撒旦最大的试探，谦卑是终止争战的起点。</div>
+                `,
+                hook: "你目前生活中是否有什么"争战"（与人冲突、内心挣扎）？雅各说根源是"私欲"和"与神为敌"。如果让你在神面前降服一件事，那会是什么？"
+            },
+
+            // ================================================================
+            // 🕊️ 第二周 · 安息日（第14天 · 周日休息）
+            // ================================================================
+            {
+                day: 14,
+                title: "🕊️ 安息日 · 默想与回顾",
+                reading: `
+                    <p style="text-align:center; font-size:1.2em;"><strong>"凡劳苦担重担的人，可以到我这里来，我就使你们得安息。"</strong><br>—— 马太福音 11:28</p>
+                    <p>今天是安息日，不学习新内容。</p>
+                    <p>请回顾本周学习的六课：</p>
+                    <ul style="padding-left:20px; line-height:2;">
+                        <li>📖 第7课 · 行道与清洁的虔诚</li>
+                        <li>📖 第8课 · 不可偏待人</li>
+                        <li>📖 第9课 · 信心若没有行为是死的</li>
+                        <li>📖 第10课 · 制伏舌头</li>
+                        <li>📖 第11课 · 两种智慧</li>
+                        <li>📖 第12课 · 争战的根源：与神为敌</li>
+                    </ul>
+                    <div class="highlight-block">🌱 默想指引：第二周的主题是"信心与行为"。你的信心是否正在通过行为被显明？你的舌头和智慧是否正在被圣灵更新？</div>
+                    <p>今天，放下一切"做"的焦虑。安静在神面前，让祂对你说——不是你要做什么，而是祂在你里面做了什么。</p>
+                `,
+                hook: "请花10-15分钟安静在神面前，然后写下：本周神对你说的最重要的一句话是什么？你的生命因此有了什么改变或立志？",
+                isSabbath: true
+            },
+
+            // ================================================================
+            // 🔥 第三周 · 信仰的争战：顺服与忍耐（周一至周六，第15-20课）
+            // ================================================================
+
+            {
+                day: 15,
+                title: "第13课 · 顺服神，抵挡魔鬼",
+                reading: `
+                    <p>雅各给出了终止争战的<strong>四步行动</strong>：</p>
+                    <p><strong>①顺服神</strong>（4:7上）——"顺服"原文的意思是"各就各位"。无条件地向神降服——不是"神啊，帮我做这个"，而是"神啊，照你的意思行"。</p>
+                    <p><strong>②抵挡魔鬼</strong>（4:7下）——魔鬼是争战背后的搅动者。但应许是："<strong>你们抵挡魔鬼，魔鬼就必离开你们逃跑了</strong>"。不是我们和魔鬼单打独斗——顺服神在前，抵挡魔鬼在后；有神的权柄作后盾，抵挡就有果效。</p>
+                    <p><strong>③亲近神</strong>（4:8）——"你们亲近神，神就必亲近你们。"具体的做法是："洁净你们的手"（外在行为），"清洁你们的心"（内在动机）。</p>
+                    <p><strong>④谦卑</strong>（4:9-10）——"在神面前自卑，主就必叫你们升高。"谦卑是四步的核心——只有真正谦卑的人，才会顺服、才会亲近神、才会为罪痛悔。</p>
+                    <div class="highlight-block">✨ 关键洞察：这四步是一个整体——没有顺服，就没有权柄抵挡；没有谦卑，就没有真正的顺服。魔鬼最怕的不是你的挣扎，而是你的降服。</div>
+                `,
+                hook: "在"顺服神、抵挡魔鬼、亲近神、谦卑"这四步中，你今天最需要操练的是哪一步？你可以用一个具体的行动来回应吗？"
+            },
+            {
+                day: 16,
+                title: "第14课 · 以神为中心的规划",
+                reading: `
+                    <p>"嗐！你们有话说：'今天、明天我们要往某城里去，在那里住一年，做买卖得利。'其实明天如何，你们还不知道。"（雅4:13-14）</p>
+                    <p>雅各不是反对"做计划"——保罗也计划旅行（徒15:36，林前16:5-9）。雅各反对的是：<strong>不顾神的旨意，凭着自己的骄傲做计划</strong>。</p>
+                    <p>正确的方法："<strong>主若愿意</strong>，我们就可以活着，也可以做这事，或做那事。"（雅4:15）</p>
+                    <p>为什么要以神为中心来计划？——生命充满未知数；生命是脆弱的（"你们原来是一片云雾"）；生命是短暂的（"出现少时就不见了"）。</p>
+                    <div class="highlight-block">✨ 关键洞察："人若知道行善，却不去行，这就是他的罪了。"（雅4:17）知道应该把计划交托给神却不去做，这是罪——不是"大罪"，但仍是罪。</div>
+                `,
+                hook: "你目前正在筹划的某件事（工作、家庭、学习、事奉）中，有没有"主权意识"的缺失？如果你在这件事前面加上"主若愿意"，你的心态会有何不同？"
+            },
+            {
+                day: 17,
+                title: "第15课 · 神向不义富人的警告",
+                reading: `
+                    <p>雅各的这段话对象是不信的富足人——他们欺压基督徒，亏欠工人的工钱，过着奢侈的生活。雅各说："<strong>你们要哭泣、号咷，因为将有苦难临到你们身上。</strong>"（雅5:1）</p>
+                    <p>他们犯罪的几方面：</p>
+                    <p><strong>①得财富的方法不对</strong>——亏欠工人工钱（申24:14-15），用不诚实的手段积累财富。</p>
+                    <p><strong>②处理财富的方法不对</strong>——囤积起来（"在这末世只知积攒钱财"），用在奢侈享乐上，"娇养了你们的心"。</p>
+                    <p><strong>③利用权势欺压人</strong>——欺压"义人"——指基督徒。</p>
+                    <div class="highlight-block">✨ 关键洞察：神的审判必临到——财富要"败坏"，衣服要"被虫咬"，金银要"长锈"。被欺压者的冤声"入了万军之主的耳"——神必伸冤。这不是说"有钱就是罪"，而是警告以不义的方法得财、以自私的方式用财、以欺压的手段护财。</div>
+                `,
+                hook: "雅各指出三种财富的危机：①怎么得；②怎么用；③怎么护。在你当前的财务生活中，哪一方面最需要被圣灵光照？你可以做出什么调整？"
+            },
+            {
+                day: 18,
+                title: "第16课 · 受欺压时要忍耐",
+                reading: `
+                    <p>"弟兄们哪，你们要忍耐，直到主来。"（雅5:7）</p>
+                    <p>雅各给了<strong>三个忍耐的榜样</strong>：</p>
+                    <p><strong>①农夫</strong>（雅5:7）——农夫撒种后不能拔苗助长，他要"忍耐等候地里宝贵的出产，直到得了秋雨春雨"。信心也是这样——我们撒下顺服的种子，必须忍耐等候神的时间。</p>
+                    <p><strong>②众先知</strong>（雅5:10）——先知们奉主的名说话，却常受逼迫、受苦。他们是"能受苦、能忍耐的榜样"。耶利米被囚、以利亚被追杀、但以理被丢进狮子坑——他们忍耐，因为知道所信的是谁。</p>
+                    <p><strong>③约伯</strong>（雅5:11）——约伯一夜之间失去一切，但他没有咒骂神。他忍耐到底，最终"主给他的结局"——神使他后来的福比先前更大。"明显主是满心怜悯，大有慈悲。"</p>
+                    <div class="highlight-block">✨ 关键洞察：雅各也提醒两件事——不要彼此埋怨（受欺压时最容易向身边的人发泄）；不要起誓（在困难中易冲动许愿，但什么誓都不可起，是就说是，不是就说不是）。</div>
+                `,
+                hook: "在你目前的处境中，你最需要操练"忍耐"的方面是什么？这三个榜样（农夫、先知、约伯）中，哪一个最能激励你？为什么？"
+            },
+            {
+                day: 19,
+                title: "第17课 · 受苦时祷告，喜乐时歌颂",
+                reading: `
+                    <p>"你们中间有受苦的呢，他就该祷告；有喜乐的呢，他就该歌颂。"（雅5:13）</p>
+                    <p><strong>受苦时的责任：祷告</strong>——"受苦"指任何一种苦难：疾病、丧失、失望、逼迫。祷告是我们"向上"的出路——不是消极忍受，而是将重担交托给主。大卫在诗篇中无数次在苦难中祷告（诗34:4，诗50:15）。</p>
+                    <p><strong>喜乐时的责任：歌颂</strong>——神呼召祂的子民歌颂祂。大卫是合神心意的人，他写了无数诗篇歌颂神（诗92:1-2，诗96:1-2）。歌颂不是"唱得好听"，而是"从心里发出"。</p>
+                    <div class="highlight-block">✨ 关键洞察：如果在地上不歌颂神，到了天堂怎么能加入那昼夜不停的赞美呢？约翰在启示录中描写天堂是一个昼夜不停歌颂神和基督的地方。</div>
+                `,
+                hook: "你现在处于"受苦"还是"喜乐"的季节？无论哪一种，你今天是否愿意用"祷告"或"歌颂"来回应神？如果歌颂对你来说不容易，你可以从哪一首诗歌开始？"
+            },
+            {
+                day: 20,
+                title: "第18课 · 为病人祷告与认罪",
+                reading: `
+                    <p>"你们中间有病了的呢，他就该请教会的长老来，他们可以奉主的名用油抹他，为他祷告。出于信心的祈祷要救那病人，主必叫他起来。"（雅5:14-15）</p>
+                    <p>关于"<strong>抹油</strong>"——在当时，"油"是普遍的治疗方法（路10:34）。这里强调的是：长老来，既祷告（属灵关怀），也使用医药（实际关怀）。这不是"圣礼"或"仪式"，而是信心行动的结合。</p>
+                    <p>关于"<strong>信心的祈祷</strong>"——不是指"只要有信心就必得医治"。保罗也求主三次除去他身上的刺，主却说"我的恩典够你用的"（林后12:8-9）。信心是"相信神能做"，也是"相信神的选择是最好的"。</p>
+                    <p>关于"<strong>认罪</strong>"——疾病不一定是因为罪（约伯的病不是因罪），但罪可能导致疾病（林前11:29-32）。所以"他若犯了罪，也必蒙赦免"——认罪是第一位的，然后祷告才有功效。</p>
+                    <div class="highlight-block">✨ 关键洞察："义人祈祷所发的力量是大有功效的。"（雅5:16）雅各用以利亚作例子——以利亚"与我们是一样性情的人"，但他的祷告大有功效，因为他敬畏神、顺服神。</div>
+                `,
+                hook: "如果你生病了，你会"请教会的长老来为你祷告"吗？为什么？在你的信仰生活中，你认为"信心"与"就医"之间是什么关系？"
+            },
+
+            // ================================================================
+            // 🕊️ 第三周 · 安息日（第21天 · 周日休息）
+            // ================================================================
+            {
+                day: 21,
+                title: "🕊️ 安息日 · 默想与回顾",
+                reading: `
+                    <p style="text-align:center; font-size:1.2em;"><strong>"我的心哪，你要称颂耶和华！凡在我里面的，也要称颂他的圣名！"</strong><br>—— 诗篇 103:1</p>
+                    <p>今天是安息日，不学习新内容。</p>
+                    <p>请回顾本周学习的六课：</p>
+                    <ul style="padding-left:20px; line-height:2;">
+                        <li>📖 第13课 · 顺服神，抵挡魔鬼</li>
+                        <li>📖 第14课 · 以神为中心的规划</li>
+                        <li>📖 第15课 · 神向不义富人的警告</li>
+                        <li>📖 第16课 · 受欺压时要忍耐</li>
+                        <li>📖 第17课 · 受苦时祷告，喜乐时歌颂</li>
+                        <li>📖 第18课 · 为病人祷告与认罪</li>
+                    </ul>
+                    <div class="highlight-block">🌱 默想指引：第三周的主题是"顺服与忍耐"。你在哪方面需要更深的顺服？在哪方面需要更久的忍耐？神是否在透过环境训练你？</div>
+                    <p>今天，感谢神在过去三周中的信实带领。祂的恩典够你用的。预备好进入最后三课的总结与差遣。</p>
+                `,
+                hook: "请花10-15分钟安静在神面前，然后写下：过去三周中，雅各书对你生命最大的改变是什么？你期待在接下来的生活中如何活出这些真理？",
+                isSabbath: true
+            },
+
+            // ================================================================
+            // 🏁 第四周 · 总结与差遣（周一至周三，第22-24课）
+            // ================================================================
+
+            {
+                day: 22,
+                title: "第19课 · 挽回迷失的真道",
+                reading: `
+                    <p>"我的弟兄们，你们中间若有失迷真道的，有人使他回转。这人该知道：叫一个罪人从迷路上转回，便是救一个灵魂不死，并且遮盖许多的罪。"（雅5:19-20）</p>
+                    <p>这是雅各书的结束，也是极其重要的劝勉——<strong>挽回迷失的弟兄，是每个基督徒的责任</strong>（加6:1-2，提前5:14）。</p>
+                    <p>一个迷失真道的人，面临什么光景？</p>
+                    <ul style="padding-left:20px; line-height:2;">
+                        <li>"救一个灵魂不死"——暗示若不回转，灵魂会死（罗6:23，雅1:6-7）。</li>
+                        <li>希伯来书说：这样的人"赎罪的祭就再没有了……惟有战惧等候审判"（来10:26-31）。</li>
+                        <li>耶稣警告：若不悔改，灯台要被挪去（启2:4-5）；要被"吐出去"（启3:15-16）。</li>
+                    </ul>
+                    <div class="highlight-block">✨ 关键洞察：挽回需要正确的态度——属灵的人、温柔的灵、自己小心、愿意分担重担、谦卑、熟悉神的话、忍耐。正确的程序：私下指出→带一两个人同去→告诉教会（太18:15-17）。不是四处宣扬，不是一上来就在讲台上点名。</div>
+                `,
+                hook: "你身边是否有"失迷真道"的弟兄姐妹？如果今天神感动你去"挽回"一个人，你需要克服的最大障碍是什么？（胆怯、缺乏爱心、时间……？）请写下你的回应。"
+            },
+            {
+                day: 23,
+                title: "第20课 · 全书的回顾：成熟与完全",
+                reading: `
+                    <p>雅各书的核心主题是：<strong>灵命长大成熟</strong>。</p>
+                    <p>雅各在1:4就提到"成全完备，毫无缺欠"——这不是指无罪，而是指"成长、成熟、完整"。他用了"完全人"（3:2），意思不是没有罪，而是"成熟、平衡、长大成人的人"。</p>
+                    <p>回顾整卷书，雅各针对的每一个问题，都是"不成熟"的表现：</p>
+                    <ul style="padding-left:20px; line-height:2;">
+                        <li>在试炼中不肯忍耐 → 不成熟</li>
+                        <li>只听道不行道 → 不成熟</li>
+                        <li>偏待人 → 不成熟</li>
+                        <li>不能控制舌头 → 不成熟</li>
+                        <li>争竞嫉妒 → 不成熟</li>
+                        <li>贪恋世界 → 不成熟</li>
+                        <li>在苦难中埋怨 → 不成熟</li>
+                    </ul>
+                    <div class="highlight-block">✨ 关键洞察：一个成熟的基督徒是——在试炼中喜乐、在试探中得胜、在言语上有节制、在行为上有信心、在冲突中谦卑、在苦难中忍耐、在祷告中恒切、在爱心上主动。</div>
+                `,
+                hook: "回顾这20天的学习，雅各书对你触动最大的一处经文或一个主题是什么？这个"触动"是否已经转化为你生活中的一个"改变"？如果还没有，今天可以开始做什么？"
+            },
+            {
+                day: 24,
+                title: "第21课 · 你是"仆人"还是"主人"？",
+                reading: `
+                    <p>雅各书的开头说："<strong>神和主耶稣基督的仆人雅各</strong>"。结尾说："<strong>叫一个罪人从迷路上转回，便是救一个灵魂不死，并且遮盖许多的罪。</strong>"</p>
+                    <p>全书从头到尾，呼召我们做一件事：<strong>作仆人</strong>。</p>
+                    <p>作"仆人"，意味着：</p>
+                    <p><strong>①绝对顺服</strong>——不管其他法则，只听从主人的话。我们服侍耶稣，不是照着我们的意思，而是照着祂的旨意（路6:46，太7:21）。</p>
+                    <p><strong>②完全谦卑</strong>——像保罗说"我原是使徒中最小的……我比众圣徒中最小的还小"（林前15:9，弗3:8）。甘心卑微，才能甘心顺服。</p>
+                    <p><strong>③绝对忠心</strong>——首先对主忠心，不考虑自己的利益（加1:10）。</p>
+                    <div class="highlight-block">✨ 关键洞察：作"仆人"，看似是"降卑"，其实是"升高"。旧约中被称为"神的仆人"的伟人有：亚伯拉罕、以撒、雅各、摩西、约书亚、迦勒、约伯、以赛亚、众先知……如果他们也被列入这个行列，是何等荣耀！"仆人"这个称呼不是耻辱，而是极大的荣誉。</div>
+                    <p style="text-align:center; font-size:1.1em; margin-top:16px;"><strong>雅各问我们："神和主耶稣基督的仆人——我们配得这称呼吗？"</strong></p>
+                `,
+                hook: "如果主今天问你："你是我的仆人吗？"你会如何回答？在你的生活中，有哪一件事可以证明你是在"作仆人"而不是"作主人"？请写下你今天的行动回应，作为这21天旅程的立志。"
+            }
         ];
 
         // ================================================================
@@ -640,19 +957,28 @@
         const bibleVerses = [
             { text: "你的话是我脚前的灯，是我路上的光。", ref: "诗篇 119:105" },
             { text: "我靠着那加给我力量的，凡事都能做。", ref: "腓立比书 4:13" },
-            { text: "你当刚强壮胆！不要惧怕，也不要惊惶，因为你无论往哪里去，耶和华你的神必与你同在。", ref: "约书亚记 1:9" },
+            { text: "你当刚强壮胆！不要惧怕，也不要惊惶，因为你无论往哪里去，耶和华你的神必与你同在。",
+            ref: "约书亚记 1:9" },
             { text: "因为耶和华赐人智慧，知识和聪明都由他口而出。", ref: "箴言 2:6" },
             { text: "你们中间若有缺少智慧的，应当求那厚赐与众人、也不斥责人的神，主就必赐给他。", ref: "雅各书 1:5" },
-            { text: "不要效法这个世界，只要心意更新而变化，叫你们察验何为神的善良、纯全、可喜悦的旨意。", ref: "罗马书 12:2" },
-            { text: "但那等候耶和华的必从新得力。他们必如鹰展翅上腾，他们奔跑却不困倦，行走却不疲乏。", ref: "以赛亚书 40:31" },
+            { text: "不要效法这个世界，只要心意更新而变化，叫你们察验何为神的善良、纯全、可喜悦的旨意。",
+                ref: "罗马书 12:2" },
+            { text: "但那等候耶和华的必从新得力。他们必如鹰展翅上腾，他们奔跑却不困倦，行走却不疲乏。",
+                ref: "以赛亚书 40:31" },
             { text: "当用各样的智慧，把基督的道理丰丰富富地存在心里，用诗章、颂词、灵歌，彼此教导，互相劝戒，心被恩感，歌颂神。",
                 ref: "歌罗西书 3:16" },
             { text: "神能照着运行在我们心里的大力，充充足足地成就一切，超过我们所求所想的。", ref: "以弗所书 3:20" },
-            { text: "你要专心仰赖耶和华，不可倚靠自己的聪明，在你一切所行的事上都要认定他，他必指引你的路。", ref: "箴言 3:5-6" }
+            { text: "你要专心仰赖耶和华，不可倚靠自己的聪明，在你一切所行的事上都要认定他，他必指引你的路。",
+                ref: "箴言 3:5-6" },
+            { text: "你的日子如何，你的力量也必如何。", ref: "申命记 33:25" },
+            { text: "我的心哪，你要称颂耶和华！凡在我里面的，也要称颂他的圣名！", ref: "诗篇 103:1" },
+            { text: "我们晓得万事都互相效力，叫爱神的人得益处，就是按他旨意被召的人。", ref: "罗马书 8:28" },
+            { text: "你们要将一切的忧虑卸给神，因为他顾念你们。", ref: "彼得前书 5:7" },
+            { text: "神所赐出人意外的平安，必在基督耶稣里保守你们的心怀意念。", ref: "腓立比书 4:7" }
         ];
 
         // ================================================================
-        // ★★★★★  核心逻辑 (不用改，直接运行) ★★★★★
+        // ★★★★★  核心逻辑 ★★★★★
         // ================================================================
 
         // --- 状态 ---
@@ -696,6 +1022,7 @@
         const ringLabel = $('ringLabel');
         const progressText = $('progressText');
         const btnCompleteDay = $('btnCompleteDay');
+        const mainCard = $('mainCard');
 
         const modalOverlay = $('celebrationModal');
         const modalEmoji = $('modalEmoji');
@@ -727,6 +1054,10 @@
 
         function getProgressPercent() {
             return Math.round((getStepCount() / 4) * 100);
+        }
+
+        function isSabbathDay(index) {
+            return courseData[index] && courseData[index].isSabbath === true;
         }
 
         function saveState() {
@@ -797,13 +1128,16 @@
             } catch (e) {}
         }
 
-        // --- 渲染日历 ---
+        // --- 渲染日历 (24天) ---
         function renderCalendar() {
             calendarGrid.innerHTML = '';
-            for (let i = 0; i < 21; i++) {
+            const totalDays = courseData.length;
+            for (let i = 0; i < totalDays; i++) {
                 const dot = document.createElement('div');
                 dot.className = 'day-dot';
-                dot.textContent = i + 1;
+                const isSabbath = courseData[i] && courseData[i].isSabbath === true;
+                if (isSabbath) dot.classList.add('sabbath');
+                dot.textContent = isSabbath ? '🕊️' : (i + 1);
                 if (state.completedDays.includes(i)) {
                     dot.classList.add('completed');
                 } else if (i === state.currentDay) {
@@ -818,6 +1152,41 @@
         // --- 更新步骤 UI 解锁状态 ---
         function updateStepsUI() {
             const s = state.steps;
+            const isSabbath = isSabbathDay(state.currentDay);
+
+            // 如果是安息日，特殊处理
+            if (isSabbath) {
+                mainCard.classList.add('sabbath-mode');
+                // 但让用户能看到阅读内容
+                step1.classList.add('unlocked');
+                step2.classList.remove('unlocked');
+                step3.classList.remove('unlocked');
+                step4.classList.remove('unlocked');
+                // 禁用所有输入
+                inputStep2.disabled = true;
+                inputStep3.disabled = true;
+                inputStep4.disabled = true;
+                btnStep1.disabled = true;
+                btnStep2.disabled = true;
+                btnStep3.disabled = true;
+                btnStep4.disabled = true;
+                btnCompleteDay.disabled = true;
+                btnCompleteDay.textContent = '🕊️ 今天是安息日';
+                timerHint.textContent = '🕊️ 安息日 · 享受神的同在';
+                timerHint.style.color = '#B8A188';
+                // 更新进度环显示
+                const pct = 100;
+                const circumference = 138.23;
+                const offset = circumference - (pct / 100) * circumference;
+                ringProgress.style.strokeDashoffset = offset;
+                ringLabel.textContent = '🕊️';
+                progressText.textContent = '今日安息 · 默想';
+                daySubStatus.textContent = '🕊️ 安息日';
+                return;
+            } else {
+                mainCard.classList.remove('sabbath-mode');
+            }
+
             // Step1 永远解锁（只要不是已完成）
             step1.classList.add('unlocked');
             if (s[1].completed) step1.classList.add('completed');
@@ -915,7 +1284,8 @@
             if (!data) return;
             currentDayData = data;
 
-            dayBadge.textContent = `第 ${index+1} / 21 天`;
+            const totalDays = courseData.length;
+            dayBadge.textContent = `第 ${index+1} / ${totalDays} 天`;
             dayTitle.textContent = data.title;
             daySubDate.textContent = `📅 第 ${index+1} 课`;
 
@@ -925,7 +1295,7 @@
             hookQuestionText.innerHTML = `🕊️ ${data.hook}`;
 
             // 重置计时器 (如果当天没完成step1)
-            if (!state.steps[1].completed) {
+            if (!state.steps[1].completed && !isSabbathDay(index)) {
                 timerSeconds = 0;
                 isTimerRunning = false;
                 state.steps[1].timerDone = false;
@@ -938,8 +1308,8 @@
             inputStep3.value = state.steps[3].text || '';
             inputStep4.value = state.steps[4].text || '';
 
-            // 如果 step1 未完成且未开始计时，启动计时
-            if (!state.steps[1].completed && !state.steps[1].timerDone) {
+            // 如果 step1 未完成且未开始计时，且不是安息日，启动计时
+            if (!state.steps[1].completed && !state.steps[1].timerDone && !isSabbathDay(index)) {
                 if (timerInterval) clearInterval(timerInterval);
                 isTimerRunning = true;
                 timerInterval = setInterval(() => {
@@ -961,6 +1331,8 @@
 
         // --- 完成步骤 ---
         function completeStep(stepNum) {
+            if (isSabbathDay(state.currentDay)) return;
+
             if (stepNum === 1) {
                 if (!state.steps[1].timerDone) return;
                 state.steps[1].completed = true;
@@ -988,7 +1360,6 @@
             }
             updateStepsUI();
             saveState();
-            // 如果全部完成，自动滚动到顶部显示进度
             if (getStepCount() === 4) {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
@@ -996,34 +1367,31 @@
 
         // --- 完成今日 ---
         function completeDay() {
+            if (isSabbathDay(state.currentDay)) return;
+
             const allDone = state.steps[1].completed && state.steps[2].completed && state.steps[3].completed && state
                 .steps[4].completed;
             if (!allDone) return;
 
-            // 标记当天为已完成
             if (!state.completedDays.includes(state.currentDay)) {
                 state.completedDays.push(state.currentDay);
             }
 
-            // 检查里程碑
             const completedCount = state.completedDays.length;
             let milestoneMsg = '';
             if (completedCount === 7) milestoneMsg = '🎉 七天！你已跨越第一个山峰！';
             else if (completedCount === 14) milestoneMsg = '🔥 十四天！你的生命正在被更新！';
             else if (completedCount === 21) milestoneMsg = '👑 二十一天！新造的人！旧事已过，都变成新的了！';
 
-            // 前进到下一天（如果未完成所有）
-            if (state.currentDay < 20) {
-                // 重置步骤状态
+            if (state.currentDay < courseData.length - 1) {
                 state.steps = { 1: { completed: false, timerDone: false }, 2: { completed: false, text: '' },
                     3: { completed: false, text: '' }, 4: { completed: false, text: '' } };
                 state.currentDay++;
-                // 如果下一天已经完成过，自动跳到未完成的一天
-                while (state.completedDays.includes(state.currentDay) && state.currentDay < 20) {
+                while (state.completedDays.includes(state.currentDay) && state.currentDay < courseData.length - 1) {
                     state.currentDay++;
                 }
                 loadDay(state.currentDay);
-                // 显示里程碑或普通鼓励
+
                 if (milestoneMsg) {
                     setTimeout(() => {
                         const verse = getRandomVerse();
@@ -1035,7 +1403,6 @@
                         burstStars();
                     }, 400);
                 } else {
-                    // 普通完成鼓励
                     setTimeout(() => {
                         const verse = getRandomVerse();
                         modalEmoji.textContent = '🌅';
@@ -1047,17 +1414,15 @@
                     }, 400);
                 }
             } else {
-                // 完成全部21天！
                 setTimeout(() => {
                     modalEmoji.textContent = '🕊️';
-                    modalTitle.textContent = '🏁 你完成了 21 天旅程！';
+                    modalTitle.textContent = '🏁 你完成了全部 24 天旅程！';
                     modalVerse.textContent =
                     `“那美好的仗我已经打过了，当跑的路我已经跑尽了，所信的道我已经守住了。”`;
                     modalRef.textContent = '— 提摩太后书 4:7';
                     modalOverlay.classList.add('show');
                     burstStars();
                 }, 400);
-                // 禁用继续
                 btnCompleteDay.disabled = true;
                 btnCompleteDay.textContent = '🎉 全部完成！哈利路亚！';
             }
@@ -1072,7 +1437,6 @@
             btnStep4.onclick = () => completeStep(4);
             btnCompleteDay.onclick = completeDay;
 
-            // 实时监听输入
             inputStep2.oninput = () => { state.steps[2].text = inputStep2.value;
                 updateStepsUI();
                 saveState(); };
@@ -1083,17 +1447,16 @@
                 updateStepsUI();
                 saveState(); };
 
-            // 点击阅读段落自动填入 Step2 (辅助摘录)
             readingContent.addEventListener('click', (e) => {
                 const target = e.target.closest('p, .highlight-block');
-                if (target && !state.steps[2].completed && state.steps[1].completed) {
+                if (target && !state.steps[2].completed && state.steps[1].completed && !isSabbathDay(state
+                        .currentDay)) {
                     let text = target.textContent.trim();
                     if (text.length > 0) {
                         inputStep2.value = text;
                         state.steps[2].text = text;
                         updateStepsUI();
                         saveState();
-                        // 闪烁反馈
                         target.style.transition = '0.1s';
                         target.style.backgroundColor = '#DCE9E3';
                         setTimeout(() => { target.style.backgroundColor = ''; }, 300);
@@ -1101,36 +1464,25 @@
                 }
             });
 
-            // 弹窗关闭
-            modalBtn.onclick = () => {
-                modalOverlay.classList.remove('show');
-            };
-            modalOverlay.onclick = (e) => {
-                if (e.target === modalOverlay) modalOverlay.classList.remove('show');
-            };
+            modalBtn.onclick = () => { modalOverlay.classList.remove('show'); };
+            modalOverlay.onclick = (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove('show'); };
         }
 
         // --- 初始化 ---
         function init() {
             loadState();
-            // 确保当前天没有被标记完成（如果已完成，自动跳到下一未完成）
-            while (state.completedDays.includes(state.currentDay) && state.currentDay < 20) {
+            while (state.completedDays.includes(state.currentDay) && state.currentDay < courseData.length - 1) {
                 state.currentDay++;
             }
-            if (state.currentDay >= 21) {
-                // 全部完成展示
-                state.currentDay = 20;
+            if (state.currentDay >= courseData.length) {
+                state.currentDay = courseData.length - 1;
             }
             loadDay(state.currentDay);
             initEvents();
-            // 自动开启计时如果未完成
-            if (!state.steps[1].completed && !state.steps[1].timerDone) {
-                // 已经在 loadDay 中启动
-            }
         }
 
         init();
-        console.log('🌱 晨光书房已开启！愿你每日得智慧。');
+        console.log('🌱 晨光书房已开启！愿你每日得着智慧。');
     </script>
 </body>
 </html>
