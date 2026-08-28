@@ -195,7 +195,6 @@
         <span class="badge">管理者专用</span>
     </div>
 
-    <!-- 登录区 -->
     <div class="login-box" id="loginBox">
         <h3 style="margin-bottom:4px;">🔑 连接 GitHub 仓库</h3>
         <p style="font-size:14px; color:#6B8A7A; margin-bottom:12px;">需要 GitHub Token 权限（repo）</p>
@@ -207,7 +206,6 @@
         <div class="status" id="loginStatus"></div>
     </div>
 
-    <!-- 主界面 -->
     <div id="mainArea" style="display:none;">
         <div class="toast" id="toast"></div>
         <div class="toolbar">
@@ -274,7 +272,6 @@
             html += '<button class="btn-edit" data-action="edit" data-idx="' + i + '">✏️ 编辑</button>';
             html += '<button class="btn-delete" data-action="delete" data-idx="' + i + '">🗑️ 删除</button>';
             html += '</div></div>';
-            // 编辑表单
             var isOpen = (editingIndex === i);
             html += '<div class="edit-form' + (isOpen ? ' open' : '') + '" data-idx="' + i + '">';
             html += '<label>标题</label><input type="text" class="edit-title" value="' + escapeHtml(item.title) + '">';
@@ -286,7 +283,6 @@
             html += '</div>';
         }
         list.innerHTML = html;
-        // 绑定事件
         list.querySelectorAll('[data-action]').forEach(function(btn) {
             btn.onclick = function() {
                 var action = this.dataset.action;
@@ -315,11 +311,6 @@
     function escapeHtml(str) {
         if (!str) return '';
         return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
-
-    function unescapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
     }
 
     function saveItemEdit(idx) {
@@ -381,13 +372,11 @@
 
         var url = 'https://api.github.com/repos/' + repo + '/contents/data.json';
 
-        // 先获取文件的 SHA
         fetch(url, {
             headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }
         })
         .then(function(res) {
             if (res.status === 404) {
-                // 文件不存在，直接创建
                 return { sha: null };
             }
             if (!res.ok) throw new Error('获取文件信息失败：' + res.status);
@@ -458,7 +447,6 @@
             }
             saveSettings(repo, token);
             $('loginStatus').textContent = '✅ 验证中...';
-            // 简单验证 token 是否有效
             fetch('https://api.github.com/user', {
                 headers: { 'Authorization': 'token ' + token }
             })
@@ -483,11 +471,6 @@
             loadData();
             showToast('🔄 已重新加载', 'info');
         };
-
-        // 如果已保存过设置，自动尝试连接
-        if ($('repoInput').value && $('tokenInput').value) {
-            // 不自动登录，等待用户点击
-        }
     }
 
     init();
