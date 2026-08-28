@@ -96,6 +96,74 @@
             margin-top: 12px;
         }
 
+        /* ===== 提醒条 ===== */
+        .reminder-bar {
+            background: #FCF8F0;
+            border-radius: 16px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(42, 75, 65, 0.06);
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-left: 4px solid #D49B6B;
+        }
+        .reminder-bar.show {
+            display: flex;
+        }
+        .reminder-bar .reminder-text {
+            font-size: 14px;
+            color: #3D5A50;
+            flex: 1;
+        }
+        .reminder-bar .reminder-text .day-num {
+            font-weight: 700;
+            color: #D49B6B;
+        }
+        .reminder-bar .reminder-text .status-done {
+            color: #2A4B41;
+            font-weight: 600;
+        }
+        .reminder-bar .reminder-text .status-pending {
+            color: #D49B6B;
+            font-weight: 600;
+        }
+        .reminder-bar .btn-reminder {
+            background: #D49B6B;
+            color: #FCF8F0;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.15s;
+            white-space: nowrap;
+        }
+        .reminder-bar .btn-reminder:active {
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
+        .reminder-bar .btn-reminder.done {
+            background: #2A4B41;
+            cursor: default;
+        }
+        .reminder-bar .btn-reminder.done:active {
+            transform: none;
+            opacity: 1;
+        }
+        .reminder-bar .streak-badge {
+            background: #E8F3EE;
+            color: #2A4B41;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
         /* ===== 用户栏 ===== */
         .user-bar {
             display: flex;
@@ -171,6 +239,23 @@
             transition: 0.15s;
         }
         .user-bar .btn-bind:active {
+            transform: scale(0.95);
+        }
+        .user-bar .btn-notif {
+            background: none;
+            border: 1px solid #8AA39A;
+            color: #8AA39A;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .user-bar .btn-notif.on {
+            border-color: #D49B6B;
+            color: #D49B6B;
+        }
+        .user-bar .btn-notif:active {
             transform: scale(0.95);
         }
 
@@ -811,7 +896,22 @@
                     <span class="title-badge" id="userTitle">🌱 种子</span>
                     <span class="score" id="userScore">⭐ 0分</span>
                 </div>
-                <button class="btn-bind" id="btnBindAccount">📧 绑定账号</button>
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                    <button class="btn-notif" id="btnNotif">🔔 提醒</button>
+                    <button class="btn-bind" id="btnBindAccount">📧 绑定</button>
+                </div>
+            </div>
+
+            <!-- ===== 提醒条 ===== -->
+            <div class="reminder-bar" id="reminderBar">
+                <div class="reminder-text" id="reminderText">
+                    📅 今日是第 <span class="day-num" id="reminderDayNum">1</span> 课 ·
+                    <span class="status-pending" id="reminderStatus">⏳ 尚未学习</span>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                    <span class="streak-badge" id="streakBadge">🔥 连续 0 天</span>
+                    <button class="btn-reminder" id="reminderBtn">📖 立即学习</button>
+                </div>
             </div>
 
             <div class="header">
@@ -838,7 +938,6 @@
                         <div class="step-header"><span class="step-num">1</span><span>📖 静读 · 领受</span></div>
                         <div class="step-body">
                             <div class="reading-text" id="readingContent"></div>
-                            <!-- 经文显示区 -->
                             <div class="bible-block" id="bibleBlock" style="display:none;">
                                 <div class="bible-title">📖 本课经文 · <span>和合本</span></div>
                                 <div class="bible-text" id="bibleText"></div>
@@ -1020,6 +1119,86 @@
                 String(d.getDate()).padStart(2, '0');
         }
 
+        function isTodayCompleted() {
+            var today = getTodayStr();
+            return state.lastStudyDate === today;
+        }
+
+        // ============================================================
+        // 浏览器通知系统
+        // ============================================================
+        function isNotificationSupported() {
+            return 'Notification' in window;
+        }
+
+        function getNotificationPermission() {
+            if (!isNotificationSupported()) return 'denied';
+            return Notification.permission;
+        }
+
+        function requestNotificationPermission() {
+            if (!isNotificationSupported()) {
+                return Promise.resolve('denied');
+            }
+            if (Notification.permission === 'granted') {
+                return Promise.resolve('granted');
+            }
+            if (Notification.permission === 'denied') {
+                return Promise.resolve('denied');
+            }
+            return Notification.requestPermission();
+        }
+
+        function sendNotification(title, body, icon) {
+            if (!isNotificationSupported()) return false;
+            if (Notification.permission !== 'granted') return false;
+            try {
+                var options = {
+                    body: body || '',
+                    icon: icon || 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f331.png',
+                    badge: icon || 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f331.png',
+                    requireInteraction: true,
+                    tag: 'study-reminder',
+                    renotify: true
+                };
+                var notification = new Notification(title, options);
+                setTimeout(function() { notification.close(); }, 10000);
+                return true;
+            } catch (e) {
+                console.error('发送通知失败:', e);
+                return false;
+            }
+        }
+
+        function checkAndSendReminder() {
+            if (!currentUser) return;
+            if (isTodayCompleted()) {
+                console.log('✅ 今日已完成，不发送提醒');
+                return;
+            }
+
+            var today = getTodayStr();
+            var lastNotifKey = 'study_last_notification_' + currentUser.id;
+            var lastNotifDate = localStorage.getItem(lastNotifKey);
+
+            // 同一天不重复发送
+            if (lastNotifDate === today) {
+                console.log('⏳ 今日已发送过提醒');
+                return;
+            }
+
+            var dayNum = state.currentDay + 1;
+            var totalDays = courseData.length;
+            var title = '🌱 晨光书房 · 今日提醒';
+            var body = '📖 今天是第 ' + dayNum + ' 课 · 你还没有开始今天的学习\n\n“你的话是我脚前的灯，是我路上的光。”';
+
+            var sent = sendNotification(title, body);
+            if (sent) {
+                localStorage.setItem(lastNotifKey, today);
+                console.log('🔔 提醒通知已发送');
+            }
+        }
+
         // ----- 数据库操作（Supabase）-----
         async function loadProgress(userId) {
             var { data, error } = await supabase
@@ -1172,6 +1351,51 @@
             var title = getTitle(state.totalScore || 0);
             $('userTitle').textContent = title.emoji + ' ' + title.name;
             $('userScore').textContent = '⭐ ' + (state.totalScore || 0) + '分';
+
+            // 更新通知按钮状态
+            var perm = getNotificationPermission();
+            var btnNotif = $('btnNotif');
+            if (perm === 'granted') {
+                btnNotif.textContent = '🔔 已开启';
+                btnNotif.className = 'btn-notif on';
+            } else if (perm === 'denied') {
+                btnNotif.textContent = '🔕 已屏蔽';
+                btnNotif.className = 'btn-notif';
+            } else {
+                btnNotif.textContent = '🔔 开启提醒';
+                btnNotif.className = 'btn-notif';
+            }
+        }
+
+        // ----- 更新提醒条 -----
+        function updateReminderBar() {
+            var bar = $('reminderBar');
+            if (!currentUser || courseData.length === 0) {
+                bar.classList.remove('show');
+                return;
+            }
+
+            var dayNum = state.currentDay + 1;
+            var totalDays = courseData.length;
+            var isDone = isTodayCompleted();
+            var streak = state.currentStreak || 0;
+
+            $('reminderDayNum').textContent = dayNum;
+            $('streakBadge').textContent = '🔥 连续 ' + streak + ' 天';
+
+            if (isDone) {
+                $('reminderStatus').textContent = '✅ 已完成';
+                $('reminderStatus').className = 'status-done';
+                $('reminderBtn').textContent = '🎉 今天已完成';
+                $('reminderBtn').className = 'btn-reminder done';
+            } else {
+                $('reminderStatus').textContent = '⏳ 尚未学习';
+                $('reminderStatus').className = 'status-pending';
+                $('reminderBtn').textContent = '📖 立即学习';
+                $('reminderBtn').className = 'btn-reminder';
+            }
+
+            bar.classList.add('show');
         }
 
         // ----- 更新步骤 UI -----
@@ -1203,6 +1427,7 @@
                 $('ringLabel').textContent = '🕊️';
                 $('progressText').textContent = '今日安息 · 默想';
                 $('daySubStatus').textContent = '🕊️ 安息日';
+                updateReminderBar();
                 return;
             } else {
                 $('mainCard').classList.remove('sabbath-mode');
@@ -1275,6 +1500,7 @@
                     '🌱 未开始'; }
 
             updateUserBar();
+            updateReminderBar();
         }
 
         // ----- 加载当天课程 -----
@@ -1288,7 +1514,6 @@
             $('readingContent').innerHTML = data.reading;
             $('hookQuestionText').innerHTML = '🕊️ ' + data.hook;
 
-            // 显示经文
             if (data.bible && data.bible.trim().length > 0) {
                 $('bibleBlock').style.display = 'block';
                 $('bibleText').textContent = data.bible;
@@ -1576,12 +1801,62 @@
                 initEvents();
                 updateUserBar();
                 syncProgressToCloud();
+
+                // 首次进入检查提醒权限
+                checkNotificationStatus();
+
+                // 检查是否需要发送今日提醒
+                setTimeout(function() {
+                    if (currentUser && !isTodayCompleted()) {
+                        checkAndSendReminder();
+                    }
+                }, 5000);
+
                 console.log('🌱 数据加载成功，共 ' + courseData.length + ' 天课程');
             } catch (error) {
                 $('loadingArea').innerHTML = '<div class="error-msg">❌ ' + error.message +
                     '<br><br>请检查：<br>1. 仓库中是否存在 data.json 文件<br>2. data.json 格式是否正确<br>3. 稍后刷新页面重试</div>';
                 console.error('加载失败：', error);
             }
+        }
+
+        // ----- 检查通知状态 -----
+        function checkNotificationStatus() {
+            var perm = getNotificationPermission();
+            var btnNotif = $('btnNotif');
+            if (perm === 'granted') {
+                btnNotif.textContent = '🔔 已开启';
+                btnNotif.className = 'btn-notif on';
+            } else if (perm === 'denied') {
+                btnNotif.textContent = '🔕 已屏蔽';
+                btnNotif.className = 'btn-notif';
+            } else {
+                btnNotif.textContent = '🔔 开启提醒';
+                btnNotif.className = 'btn-notif';
+            }
+        }
+
+        // ----- 请求通知权限 -----
+        async function requestNotifPermission() {
+            var perm = getNotificationPermission();
+            if (perm === 'granted') {
+                alert('✅ 通知权限已开启！你将在每日收到学习提醒。');
+                return;
+            }
+            if (perm === 'denied') {
+                alert('❌ 你已屏蔽通知。如需开启，请在浏览器设置中允许 ' + window.location.hostname + ' 发送通知。');
+                return;
+            }
+
+            var result = await requestNotificationPermission();
+            if (result === 'granted') {
+                alert('✅ 通知已开启！你将在每日收到学习提醒。');
+                // 发送一条测试通知
+                sendNotification('🌱 晨光书房', '通知已开启！每日提醒已就绪。');
+            } else {
+                alert('⚠️ 你拒绝了通知权限。如需开启，可在浏览器设置中重新授权。');
+            }
+            checkNotificationStatus();
         }
 
         // ----- 事件绑定 -----
@@ -1591,6 +1866,22 @@
             $('btnStep3').onclick = function() { completeStep(3); };
             $('btnStep4').onclick = function() { completeStep(4); };
             $('btnCompleteDay').onclick = completeDay;
+
+            // 提醒条按钮 - 跳转到当天课程
+            $('reminderBtn').onclick = function() {
+                if (this.classList.contains('done')) return;
+                // 滚动到顶部，聚焦学习区
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                // 如果第1步未完成，聚焦到阅读区
+                if (!state.steps[1].completed) {
+                    $('readingContent').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            };
+
+            // 通知按钮
+            $('btnNotif').onclick = function() {
+                requestNotifPermission();
+            };
 
             $('inputStep2').oninput = function() {
                 state.steps[2].text = $('inputStep2').value;
@@ -1789,11 +2080,20 @@
         }, 30000);
 
         // ============================================================
+        // 定时检查提醒（每15分钟检查一次）
+        // ============================================================
+        setInterval(function() {
+            if (currentUser && courseData.length > 0) {
+                checkAndSendReminder();
+            }
+        }, 900000); // 15分钟
+
+        // ============================================================
         // 初始化
         // ============================================================
         checkExistingSession();
 
-        console.log('🌱 晨光书房已开启（访客模式 + 经文显示）！');
+        console.log('🌱 晨光书房已开启（访客模式 + 每日提醒）！');
     </script>
 </body>
 </html>
