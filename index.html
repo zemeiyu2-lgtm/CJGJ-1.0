@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>🌱 晨光书房 · 自觉成长</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js">
     </script>
@@ -24,7 +24,6 @@
             margin: 0 auto;
         }
 
-        /* ===== 欢迎页 ===== */
         .welcome-box {
             background: #FCF8F0;
             border-radius: 28px;
@@ -96,7 +95,6 @@
             margin-top: 12px;
         }
 
-        /* ===== 提醒条 ===== */
         .reminder-bar {
             background: #FCF8F0;
             border-radius: 16px;
@@ -164,7 +162,6 @@
             white-space: nowrap;
         }
 
-        /* ===== 用户栏 ===== */
         .user-bar {
             display: flex;
             justify-content: space-between;
@@ -258,8 +255,26 @@
         .user-bar .btn-notif:active {
             transform: scale(0.95);
         }
+        /* 音效开关 */
+        .user-bar .btn-sound {
+            background: none;
+            border: 1px solid #8AA39A;
+            color: #8AA39A;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.15s;
+            line-height: 1.4;
+        }
+        .user-bar .btn-sound.on {
+            border-color: #2A4B41;
+            color: #2A4B41;
+        }
+        .user-bar .btn-sound:active {
+            transform: scale(0.95);
+        }
 
-        /* ===== 绑定弹窗 ===== */
         .bind-overlay {
             display: none;
             position: fixed;
@@ -371,7 +386,6 @@
             display: block;
         }
 
-        /* ===== 原有样式 ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -553,7 +567,6 @@
             margin-top: 4px;
         }
 
-        /* ===== 阅读区 ===== */
         .reading-text {
             font-size: 16px;
             line-height: 1.9;
@@ -586,7 +599,6 @@
             font-weight: 700;
         }
 
-        /* ===== 经文显示区 ===== */
         .bible-block {
             background: #F4F9F6;
             border-radius: 12px;
@@ -612,7 +624,6 @@
             font-family: "Georgia", "Times New Roman", serif;
         }
 
-        /* ===== 按钮 ===== */
         .btn-step {
             background: #D49B6B;
             color: #FCF8F0;
@@ -868,7 +879,7 @@
                 <div class="logo">🌱</div>
                 <h1>晨光书房</h1>
                 <p class="sub">
-                    按天学习雅各书<br>
+                    按天学习雅各书<br />
                     在真理中自觉成长
                 </p>
                 <button class="btn-start" id="btnStartLearning">
@@ -897,6 +908,7 @@
                     <span class="score" id="userScore">⭐ 0分</span>
                 </div>
                 <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                    <button class="btn-sound on" id="btnSound" title="音效开关">🔊</button>
                     <button class="btn-notif" id="btnNotif">🔔 提醒</button>
                     <button class="btn-bind" id="btnBindAccount">📧 绑定</button>
                 </div>
@@ -1001,9 +1013,9 @@
             <div id="bindError" class="bind-error"></div>
             <div id="bindSuccess" class="bind-success"></div>
             <label>📧 邮箱</label>
-            <input type="email" id="bindEmail" placeholder="你的邮箱">
+            <input type="email" id="bindEmail" placeholder="你的邮箱" />
             <label>🔒 密码</label>
-            <input type="password" id="bindPassword" placeholder="至少6位">
+            <input type="password" id="bindPassword" placeholder="至少6位" />
             <button class="btn-bind-confirm" id="btnBindConfirm">🔗 绑定并同步</button>
             <button class="btn-bind-close" id="btnBindClose">⏳ 稍后再说</button>
         </div>
@@ -1023,11 +1035,142 @@
 
     <script>
         // ============================================================
-        // ★★★ 在这里填写你的 Supabase 配置（只改这两个值） ★★★
+        // ★★★ 音效系统 ★★★
+        // ============================================================
+        var SoundFX = (function() {
+            var ctx = null;
+            var enabled = true;
+
+            function init() {
+                if (!ctx) {
+                    try {
+                        ctx = new(window.AudioContext || window.webkitAudioContext)();
+                    } catch (e) {
+                        console.warn('Web Audio API not supported');
+                        return null;
+                    }
+                }
+                if (ctx && ctx.state === 'suspended') {
+                    ctx.resume().catch(function(e) {});
+                }
+                return ctx;
+            }
+
+            function playTone(freq, duration, type, volume, delay) {
+                if (!enabled) return;
+                var context = init();
+                if (!context) return;
+                try {
+                    var osc = context.createOscillator();
+                    var gain = context.createGain();
+                    osc.type = type || 'sine';
+                    osc.frequency.value = freq;
+                    var vol = volume || 0.2;
+                    gain.gain.setValueAtTime(vol, context.currentTime + (delay || 0));
+                    gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + (delay || 0) + duration);
+                    osc.connect(gain);
+                    gain.connect(context.destination);
+                    osc.start(context.currentTime + (delay || 0));
+                    osc.stop(context.currentTime + (delay || 0) + duration);
+                } catch (e) {
+                    // 静默失败
+                }
+            }
+
+            function playChord(freqs, duration, type, volume) {
+                if (!enabled) return;
+                var context = init();
+                if (!context) return;
+                try {
+                    freqs.forEach(function(freq, i) {
+                        var osc = context.createOscillator();
+                        var gain = context.createGain();
+                        osc.type = type || 'sine';
+                        osc.frequency.value = freq;
+                        var vol = (volume || 0.15) * 0.8;
+                        gain.gain.setValueAtTime(vol, context.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + duration);
+                        osc.connect(gain);
+                        gain.connect(context.destination);
+                        osc.start(context.currentTime);
+                        osc.stop(context.currentTime + duration);
+                    });
+                } catch (e) {}
+            }
+
+            // ---- 公开音效方法 ----
+            return {
+                // 是否启用
+                setEnabled: function(val) {
+                    enabled = !!val;
+                },
+                isEnabled: function() {
+                    return enabled;
+                },
+                // 初始化（可由用户手势触发）
+                init: init,
+
+                // 1. 点击 / 轻触
+                tap: function() {
+                    playTone(800, 0.05, 'sine', 0.12);
+                },
+
+                // 2. 步骤完成 (两个上升音符)
+                stepComplete: function() {
+                    playTone(523, 0.09, 'sine', 0.18);
+                    playTone(659, 0.09, 'sine', 0.18, 0.07);
+                },
+
+                // 3. 每日完成 (四个上升音符)
+                dayComplete: function() {
+                    playTone(523, 0.10, 'sine', 0.20);
+                    playTone(659, 0.10, 'sine', 0.20, 0.08);
+                    playTone(784, 0.10, 'sine', 0.20, 0.16);
+                    playTone(1047, 0.12, 'sine', 0.20, 0.24);
+                },
+
+                // 4. 里程碑 (庄重旋律)
+                milestone: function() {
+                    playTone(523, 0.12, 'sine', 0.25);
+                    playTone(659, 0.12, 'sine', 0.25, 0.10);
+                    playTone(784, 0.12, 'sine', 0.25, 0.20);
+                    playTone(1047, 0.12, 'sine', 0.25, 0.30);
+                    playTone(1319, 0.14, 'sine', 0.22, 0.42);
+                    playTone(1568, 0.16, 'sine', 0.20, 0.54);
+                },
+
+                // 5. 提醒 / 钟声
+                reminder: function() {
+                    playTone(600, 0.40, 'sine', 0.10);
+                    // 加一点颤音效果
+                    setTimeout(function() {
+                        if (enabled) playTone(620, 0.30, 'sine', 0.08);
+                    }, 150);
+                },
+
+                // 6. 成功 (温暖和弦)
+                success: function() {
+                    playChord([523, 659, 784], 0.35, 'sine', 0.18);
+                },
+
+                // 7. 错误 (低沉警示)
+                error: function() {
+                    playTone(250, 0.18, 'square', 0.10);
+                },
+
+                // 8. 弹窗 (轻柔提示)
+                modal: function() {
+                    playTone(500, 0.10, 'sine', 0.08);
+                }
+            };
+        })();
+
+
+        // ============================================================
+        // ★★★ Supabase 配置 ★★★
         // ============================================================
         var SUPABASE_URL = 'https://kxpysncdczpgqsmemess.supabase.co/';
         var SUPABASE_ANON_KEY = 'sb_publishable_vhjwgRWoB9tz5_3A9jaZyA_AlI6liLh';
-        // ============================================================
 
         var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -1163,6 +1306,8 @@
                 };
                 var notification = new Notification(title, options);
                 setTimeout(function() { notification.close(); }, 10000);
+                // 播放提醒音效
+                SoundFX.reminder();
                 return true;
             } catch (e) {
                 console.error('发送通知失败:', e);
@@ -1181,7 +1326,6 @@
             var lastNotifKey = 'study_last_notification_' + currentUser.id;
             var lastNotifDate = localStorage.getItem(lastNotifKey);
 
-            // 同一天不重复发送
             if (lastNotifDate === today) {
                 console.log('⏳ 今日已发送过提醒');
                 return;
@@ -1280,35 +1424,72 @@
             }
         }
 
-        function showCelebration(stepNum, points) {
+        // ============================================================
+        // 庆祝弹窗（增强音效版）
+        // ============================================================
+        function showCelebration(stepNum, points, type) {
+            // type: 'step' | 'day' | 'milestone' | undefined(自动检测)
             var verse = getRandomVerse();
+
+            // 确定音效类型
+            var soundType = type || 'step';
+            if (!type) {
+                if (stepNum >= 1 && stepNum <= 4) soundType = 'step';
+                else soundType = 'day';
+            }
+
+            // 播放对应音效
+            switch (soundType) {
+                case 'step':
+                    SoundFX.stepComplete();
+                    break;
+                case 'day':
+                    SoundFX.dayComplete();
+                    break;
+                case 'milestone':
+                    SoundFX.milestone();
+                    break;
+                default:
+                    SoundFX.modal();
+            }
+
+            // 弹窗内容
             var messages = {
                 1: { emoji: '📖', title: '领受话语，如鹿渴慕溪水！' },
                 2: { emoji: '🎯', title: '你抓住了真理的亮光！' },
                 3: { emoji: '🔗', title: '主的话语正在你生命中生根！' },
                 4: { emoji: '🕊️', title: '行出真理，磐石之上！' }
             };
-            var msg = messages[stepNum] || messages[1];
-            $('modalEmoji').textContent = msg.emoji;
-            $('modalTitle').textContent = msg.title;
+
+            var msg = (stepNum >= 1 && stepNum <= 4) ? messages[stepNum] : null;
+
+            if (soundType === 'milestone') {
+                $('modalEmoji').textContent = '👑';
+                $('modalTitle').textContent = '🏆 里程碑达成！';
+            } else if (soundType === 'day') {
+                $('modalEmoji').textContent = '🌅';
+                $('modalTitle').textContent = '今日的托付，你已忠心完成！';
+            } else if (msg) {
+                $('modalEmoji').textContent = msg.emoji;
+                $('modalTitle').textContent = msg.title;
+            } else {
+                $('modalEmoji').textContent = '⭐';
+                $('modalTitle').textContent = '太棒了！';
+            }
+
             $('modalVerse').textContent = '“' + verse.text + '”';
             $('modalRef').textContent = '— ' + verse.ref;
-            $('modalPoints').textContent = '✨ +' + points + ' 积分';
+            $('modalPoints').textContent = (points !== undefined && points !== null) ?
+                '✨ +' + points + ' 积分' :
+                '⭐ 总积分 ' + (state.totalScore || 0);
+
             $('celebrationModal').classList.add('show');
             burstStars();
-            try {
-                var ctx = new(window.AudioContext || window.webkitAudioContext)();
-                var osc = ctx.createOscillator();
-                var gain = ctx.createGain();
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.frequency.value = 880;
-                osc.type = 'sine';
-                gain.gain.value = 0.15;
-                osc.start();
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
-                osc.stop(ctx.currentTime + 0.6);
-            } catch (e) {}
+
+            // 弹窗出现时播放轻柔提示音（叠加在庆祝音效之上）
+            setTimeout(function() {
+                SoundFX.modal();
+            }, 200);
         }
 
         // ----- 渲染日历 -----
@@ -1364,6 +1545,16 @@
             } else {
                 btnNotif.textContent = '🔔 开启提醒';
                 btnNotif.className = 'btn-notif';
+            }
+
+            // 更新音效按钮状态
+            var btnSound = $('btnSound');
+            if (SoundFX.isEnabled()) {
+                btnSound.textContent = '🔊';
+                btnSound.className = 'btn-sound on';
+            } else {
+                btnSound.textContent = '🔇';
+                btnSound.className = 'btn-sound';
             }
         }
 
@@ -1574,7 +1765,8 @@
                     timerInterval = null; }
                 var pts = calculatePoints(1);
                 state.totalScore = (state.totalScore || 0) + pts;
-                showCelebration(1, pts);
+                // 播放步骤完成音效 + 弹窗
+                showCelebration(1, pts, 'step');
             } else if (stepNum === 2) {
                 var text = $('inputStep2').value.trim();
                 if (text.length < 10) return;
@@ -1582,7 +1774,7 @@
                 state.steps[2].completed = true;
                 var pts = calculatePoints(2);
                 state.totalScore = (state.totalScore || 0) + pts;
-                showCelebration(2, pts);
+                showCelebration(2, pts, 'step');
             } else if (stepNum === 3) {
                 var text = $('inputStep3').value.trim();
                 if (text.length < 10) return;
@@ -1590,7 +1782,7 @@
                 state.steps[3].completed = true;
                 var pts = calculatePoints(3);
                 state.totalScore = (state.totalScore || 0) + pts;
-                showCelebration(3, pts);
+                showCelebration(3, pts, 'step');
             } else if (stepNum === 4) {
                 var text = $('inputStep4').value.trim();
                 if (text.length < 10) return;
@@ -1598,7 +1790,7 @@
                 state.steps[4].completed = true;
                 var pts = calculatePoints(4);
                 state.totalScore = (state.totalScore || 0) + pts;
-                showCelebration(4, pts);
+                showCelebration(4, pts, 'step');
             }
             updateStepsUI();
             syncProgressToCloud();
@@ -1639,41 +1831,33 @@
                 if (state.currentStreak > (state.bestStreak || 0)) {
                     state.bestStreak = state.currentStreak;
                 }
-                if (state.currentStreak === 7) {
+
+                // 里程碑检测
+                var isMilestone7 = state.currentStreak === 7;
+                var isMilestone14 = state.currentStreak === 14;
+                var isMilestone21 = state.currentStreak === 21;
+
+                if (isMilestone7) {
                     state.totalScore = (state.totalScore || 0) + 30;
                     setTimeout(function() {
-                        var verse = getRandomVerse();
+                        showCelebration(null, 30, 'milestone');
+                        // 覆盖弹窗内容
                         $('modalEmoji').textContent = '🎊';
                         $('modalTitle').textContent = '🔥 连续7天！你已跨越第一个山峰！';
-                        $('modalVerse').textContent = '“' + verse.text + '”';
-                        $('modalRef').textContent = '— ' + verse.ref;
-                        $('modalPoints').textContent = '✨ +30 里程碑积分！';
-                        $('celebrationModal').classList.add('show');
-                        burstStars();
                     }, 600);
-                } else if (state.currentStreak === 14) {
+                } else if (isMilestone14) {
                     state.totalScore = (state.totalScore || 0) + 50;
                     setTimeout(function() {
-                        var verse = getRandomVerse();
+                        showCelebration(null, 50, 'milestone');
                         $('modalEmoji').textContent = '🔥';
                         $('modalTitle').textContent = '💪 连续14天！你的生命正在被更新！';
-                        $('modalVerse').textContent = '“' + verse.text + '”';
-                        $('modalRef').textContent = '— ' + verse.ref;
-                        $('modalPoints').textContent = '✨ +50 里程碑积分！';
-                        $('celebrationModal').classList.add('show');
-                        burstStars();
                     }, 800);
-                } else if (state.currentStreak === 21) {
+                } else if (isMilestone21) {
                     state.totalScore = (state.totalScore || 0) + 100;
                     setTimeout(function() {
-                        var verse = getRandomVerse();
+                        showCelebration(null, 100, 'milestone');
                         $('modalEmoji').textContent = '👑';
                         $('modalTitle').textContent = '🏆 连续21天！新造的人！旧事已过！';
-                        $('modalVerse').textContent = '“' + verse.text + '”';
-                        $('modalRef').textContent = '— ' + verse.ref;
-                        $('modalPoints').textContent = '✨ +100 里程碑积分！';
-                        $('celebrationModal').classList.add('show');
-                        burstStars();
                     }, 1000);
                 }
             }
@@ -1698,27 +1882,22 @@
                 loadDay(state.currentDay);
                 syncProgressToCloud();
                 setTimeout(function() {
-                    var verse = getRandomVerse();
+                    showCelebration(null, 0, 'day');
                     $('modalEmoji').textContent = '🌅';
                     $('modalTitle').textContent = '你忠于今日的托付！';
-                    $('modalVerse').textContent = '“' + verse.text + '”';
-                    $('modalRef').textContent = '— ' + verse.ref;
                     $('modalPoints').textContent = '⭐ 总积分 ' + state.totalScore;
-                    $('celebrationModal').classList.add('show');
-                    burstStars();
                 }, 400);
             } else {
                 state.totalScore = (state.totalScore || 0) + 200;
                 syncProgressToCloud();
                 setTimeout(function() {
+                    showCelebration(null, 200, 'milestone');
                     $('modalEmoji').textContent = '🕊️';
                     $('modalTitle').textContent = '🏁 你完成了全部旅程！';
                     $('modalVerse').textContent =
                         '“那美好的仗我已经打过了，当跑的路我已经跑尽了，所信的道我已经守住了。”';
                     $('modalRef').textContent = '— 提摩太后书 4:7';
                     $('modalPoints').textContent = '👑 毕业奖励 +200 积分！总积分 ' + state.totalScore;
-                    $('celebrationModal').classList.add('show');
-                    burstStars();
                 }, 400);
                 $('btnCompleteDay').disabled = true;
                 $('btnCompleteDay').textContent = '🎉 全部完成！哈利路亚！';
@@ -1802,10 +1981,8 @@
                 updateUserBar();
                 syncProgressToCloud();
 
-                // 首次进入检查提醒权限
                 checkNotificationStatus();
 
-                // 检查是否需要发送今日提醒
                 setTimeout(function() {
                     if (currentUser && !isTodayCompleted()) {
                         checkAndSendReminder();
@@ -1851,7 +2028,6 @@
             var result = await requestNotificationPermission();
             if (result === 'granted') {
                 alert('✅ 通知已开启！你将在每日收到学习提醒。');
-                // 发送一条测试通知
                 sendNotification('🌱 晨光书房', '通知已开启！每日提醒已就绪。');
             } else {
                 alert('⚠️ 你拒绝了通知权限。如需开启，可在浏览器设置中重新授权。');
@@ -1867,20 +2043,34 @@
             $('btnStep4').onclick = function() { completeStep(4); };
             $('btnCompleteDay').onclick = completeDay;
 
-            // 提醒条按钮 - 跳转到当天课程
             $('reminderBtn').onclick = function() {
                 if (this.classList.contains('done')) return;
-                // 滚动到顶部，聚焦学习区
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-                // 如果第1步未完成，聚焦到阅读区
                 if (!state.steps[1].completed) {
                     $('readingContent').scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             };
 
-            // 通知按钮
             $('btnNotif').onclick = function() {
                 requestNotifPermission();
+            };
+
+            // === 音效开关 ===
+            $('btnSound').onclick = function() {
+                var enabled = SoundFX.isEnabled();
+                SoundFX.setEnabled(!enabled);
+                // 切换时播放点击音效（如果开启）
+                if (!enabled) {
+                    // 刚刚开启，播放 tap 表示已开启
+                    SoundFX.tap();
+                } else {
+                    // 刚刚关闭，不播放音效
+                }
+                updateUserBar();
+                // 保存状态到 localStorage
+                try {
+                    localStorage.setItem('soundfx_enabled', SoundFX.isEnabled() ? '1' : '0');
+                } catch (e) {}
             };
 
             $('inputStep2').oninput = function() {
@@ -1916,13 +2106,21 @@
                         setTimeout(function() { target.style.backgroundColor = ''; }, 300);
                         clearTimeout(window._saveTimer);
                         window._saveTimer = setTimeout(syncProgressToCloud, 3000);
+                        // 点击摘录时播放轻触音效
+                        SoundFX.tap();
                     }
                 }
             });
 
-            $('modalBtn').onclick = function() { $('celebrationModal').classList.remove('show'); };
+            $('modalBtn').onclick = function() {
+                $('celebrationModal').classList.remove('show');
+                SoundFX.tap();
+            };
             $('celebrationModal').onclick = function(e) {
-                if (e.target === $('celebrationModal')) $('celebrationModal').classList.remove('show');
+                if (e.target === $('celebrationModal')) {
+                    $('celebrationModal').classList.remove('show');
+                    SoundFX.tap();
+                }
             };
         }
 
@@ -1930,6 +2128,7 @@
         // 欢迎页点击"开始学习" -> 匿名登录
         // ============================================================
         $('btnStartLearning').onclick = async function() {
+            SoundFX.tap();
             $('btnStartLearning').disabled = true;
             $('welcomeLoading').classList.remove('hidden');
             $('welcomeLoading').textContent = '⏳ 正在连接...';
@@ -1941,12 +2140,14 @@
                     console.error('匿名登录失败:', error);
                     $('welcomeLoading').textContent = '❌ 连接失败，请刷新重试';
                     $('btnStartLearning').disabled = false;
+                    SoundFX.error();
                     return;
                 }
 
                 if (!data || !data.user) {
                     $('welcomeLoading').textContent = '❌ 未获取到用户信息';
                     $('btnStartLearning').disabled = false;
+                    SoundFX.error();
                     return;
                 }
 
@@ -1960,6 +2161,7 @@
                 $('studyArea').classList.remove('hidden');
 
                 updateUserBar();
+                SoundFX.success();
 
                 console.log('✅ 匿名登录成功，用户ID:', currentUser.id);
 
@@ -1967,6 +2169,7 @@
                 console.error('启动失败:', err);
                 $('welcomeLoading').textContent = '❌ 启动失败: ' + err.message;
                 $('btnStartLearning').disabled = false;
+                SoundFX.error();
             }
         };
 
@@ -1974,6 +2177,7 @@
         // 绑定账号功能
         // ============================================================
         $('btnBindAccount').onclick = function() {
+            SoundFX.tap();
             $('bindOverlay').classList.add('show');
             $('bindError').className = 'bind-error';
             $('bindSuccess').className = 'bind-success';
@@ -1982,25 +2186,32 @@
         };
 
         $('btnBindClose').onclick = function() {
+            SoundFX.tap();
             $('bindOverlay').classList.remove('show');
         };
 
         $('bindOverlay').onclick = function(e) {
-            if (e.target === this) $('bindOverlay').classList.remove('show');
+            if (e.target === this) {
+                SoundFX.tap();
+                $('bindOverlay').classList.remove('show');
+            }
         };
 
         $('btnBindConfirm').onclick = async function() {
+            SoundFX.tap();
             var email = $('bindEmail').value.trim();
             var password = $('bindPassword').value.trim();
 
             if (!email || !password) {
                 $('bindError').textContent = '请填写邮箱和密码';
                 $('bindError').className = 'bind-error show';
+                SoundFX.error();
                 return;
             }
             if (password.length < 6) {
                 $('bindError').textContent = '密码至少需要6位';
                 $('bindError').className = 'bind-error show';
+                SoundFX.error();
                 return;
             }
 
@@ -2020,6 +2231,7 @@
                     $('bindError').className = 'bind-error show';
                     $('btnBindConfirm').disabled = false;
                     $('btnBindConfirm').textContent = '🔗 绑定并同步';
+                    SoundFX.error();
                     return;
                 }
 
@@ -2028,6 +2240,7 @@
                 $('bindSuccess').textContent = '✅ 绑定成功！进度已同步到你的账号';
                 $('bindSuccess').className = 'bind-success show';
                 updateUserBar();
+                SoundFX.success();
 
                 await syncProgressToCloud();
 
@@ -2042,6 +2255,7 @@
                 $('bindError').className = 'bind-error show';
                 $('btnBindConfirm').disabled = false;
                 $('btnBindConfirm').textContent = '🔗 绑定并同步';
+                SoundFX.error();
             }
         };
 
@@ -2073,6 +2287,22 @@
         }
 
         // ============================================================
+        // 恢复音效状态
+        // ============================================================
+        function restoreSoundSettings() {
+            try {
+                var val = localStorage.getItem('soundfx_enabled');
+                if (val === '0') {
+                    SoundFX.setEnabled(false);
+                } else if (val === '1') {
+                    SoundFX.setEnabled(true);
+                }
+                // 默认开启
+            } catch (e) {}
+            updateUserBar();
+        }
+
+        // ============================================================
         // 定时自动同步（每30秒）
         // ============================================================
         setInterval(function() {
@@ -2086,14 +2316,15 @@
             if (currentUser && courseData.length > 0) {
                 checkAndSendReminder();
             }
-        }, 900000); // 15分钟
+        }, 900000);
 
         // ============================================================
         // 初始化
         // ============================================================
+        restoreSoundSettings();
         checkExistingSession();
 
-        console.log('🌱 晨光书房已开启（访客模式 + 每日提醒）！');
+        console.log('🌱 晨光书房已开启（访客模式 + 音效系统）！');
     </script>
 </body>
 </html>
